@@ -83,7 +83,24 @@ export default new Router({
             path:"/indexBar",
             name:"indexBar",
             component: resolve =>require(['@/view/walletAccount/indexBar.vue'], resolve)
-        },
+        },{
+            path:"/addBankCard",
+            name:"addBankCard",
+            component: resolve =>require(['@/view/openAccount/addBankCard.vue'], resolve)
+        },{
+            path:"/testDemo",
+            name:"testDemo",
+            component: resolve =>require(['@/view/openAccount/testDemo.vue'], resolve)
+        },{
+            path:"/addPerInfo",
+            name:"addPerInfo",
+            component: resolve =>require(['@/view/openAccount/addPerInfo.vue'], resolve)
+        },{
+            path:"/upLoadIdCard",
+            name:"upLoadIdCard",
+            component: resolve =>require(['@/view/openAccount/upLoadIdCard.vue'], resolve)
+        }
+        
         // {
         //     path:"/modPhoneVerifyCode",
         //     name:"modPhoneVerifyCode",

@@ -10,6 +10,7 @@ const store = new Vuex.Store({
         initData:"",//获取的初始化数据
         rqs_Jrnl_No:"",//生成的第三方流水
         dataC100:{},//c100接口中返回的数据
+        data1010:{},//1010接口返回数据
         Avl_Bal:"",//首页中的金额
         openAnAccount:false,
         modFornmData:{},//修改手机号-短信校验数据
@@ -31,6 +32,12 @@ const store = new Vuex.Store({
         },
         DataC100_Change(state,val){
             state.dataC100=val
+        },
+        DataC100_Digt_Acc_Ar_ID_Change(state,val){
+            state.dataC100.Data.Digt_Acc_Ar_ID = val
+        },
+        Data1010_Change(state,val){
+            state.data1010=val
         },
         Avl_Bal_Change(state,val){
             state.Avl_Bal=val

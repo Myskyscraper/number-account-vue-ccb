@@ -23,6 +23,10 @@
                 <van-grid-item :text="item.text" :icon="item.icon" />
             </div>
         </van-grid>
+
+        <div class="test" @click="test">
+           测试连接
+        </div>
         <div class="hintbox">
             本服务由建设银行提供
         </div>
@@ -123,6 +127,10 @@ export default {
             // alert('返回')
             this.$router.push("/walletMain")
         },
+        test(){
+            console.log('ok')
+            this.$router.push("/addBankCard")
+        },
         getMoneyMsg(){
             let params={
                 "DbCrd_CardNo": this.$store.state.dataC100.Data.DbCrd_CardNo , //借记卡卡号   data.Data.DbCrd_CardNo"4213490010017000"
@@ -186,6 +194,10 @@ export default {
         text-align: center;
         line-height: 125px;
         color: #fff;
+    }
+    .test{
+        margin-top: 30px;
+        font-size: 12px;
     }
     .router-link-style {
         flex-basis: 33.3333%;
