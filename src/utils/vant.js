@@ -3,7 +3,7 @@ import { DatetimePicker, ActionSheet, Cell, CellGroup,
      Grid, GridItem, Image, NavBar, Row, Col, Popup, Icon, 
      Radio, RadioGroup, Panel, Field, Button, Card, Tab, Tabs, 
      Sticky, List ,Picker ,Toast,Loading,Dialog,Switch,IndexBar,IndexAnchor,
-     Search, SwipeCell ,
+     Search, SwipeCell ,Checkbox,CheckboxGroup, 
 
 } from 'vant'
 import 'vant/lib/index.css';
@@ -38,3 +38,4 @@ Vue.use(Switch)
 Vue.use(IndexBar).use(IndexAnchor)
 Vue.use(Search)
 Vue.use(SwipeCell)
+Vue.use(Checkbox).use(CheckboxGroup)

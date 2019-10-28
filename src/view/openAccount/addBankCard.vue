@@ -21,6 +21,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -119,6 +120,7 @@ export default {
           console.log("返回1010参数", res);
           this.$store.commit("Data1010_Change",res);//存下1010数据
           let bankType = res.Data.BnkCD.slice(0,3);
+          this.$store.commit('bankType_change',bankType);
           if(bankType=="105"){
               this.$router.push({
                 path:'./addPerInfo',

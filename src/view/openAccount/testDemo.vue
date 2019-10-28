@@ -18,6 +18,14 @@ const citys = {
 export default {
   data() {
     return {
+      value: "",
+      custName:'',
+      custId:'',
+      custMblph:'',//手机号
+      custJob:'',
+      custAddress:'',//地址
+      jobvalue: "",
+      adrvalue: "",
       columns: [
         {
           values: Object.keys(citys),

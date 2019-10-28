@@ -16,6 +16,7 @@ const store = new Vuex.Store({
         modFornmData:{},//修改手机号-短信校验数据
         deleteFlag:false,//删除银行卡开关，控制只有一个列能滑动
         addressesData:{},//未开户时调用地址接口返回的数据
+        bankType:''//开户判断本行105 他行非105
     },
     mutations: {
         showLoading(state,isLoad) {
@@ -53,6 +54,9 @@ const store = new Vuex.Store({
         },
         addressesData_Change(state,val){
             state.addressesData=val
+        },
+        bankType_change(state,val){
+            state.bankType =val
         }
     },
     actions: {}
