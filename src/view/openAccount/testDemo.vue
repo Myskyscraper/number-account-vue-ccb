@@ -39,12 +39,18 @@ export default {
       ]
     };
   },
+  created () {
+    initData()
+  },
   methods: {
     show() {
       console.log(this.text.length);
     },
     onChange(picker, values) {
       picker.setColumnValues(1, citys[values[0]]);
+    },
+    initData(){
+      
     }
   }
 };

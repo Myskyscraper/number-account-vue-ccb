@@ -2,7 +2,7 @@
   <div>
     <van-nav-bar title="添加银行卡" left-arrow @click-left="back" />
     <van-cell-group>
-      <van-field v-model="bankCardNo" label="银行卡" placeholder="请输入银行卡号" />
+      <van-field v-model="bankCardNo" label="银行卡" placeholder="请输入银行卡号" type="tel"/>
     </van-cell-group>
 
     <van-button
@@ -95,8 +95,6 @@ export default {
             "DataC100_Digt_Acc_Ar_ID_Change",
             res.Data.Digt_Acc_Ar_ID
           );
-
-
 
         })
         .catch(err => {
