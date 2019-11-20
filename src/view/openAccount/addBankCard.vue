@@ -34,11 +34,14 @@ export default {
   },
   computed: {
     checkCanClick:function(){
+
       if(this.bankCardNo.length>16&&this.bankCardNo.length<20){
         return this.canFlag =false
       }else{
         return this.canFlag =true
       }
+
+      
     }
   },
   mounted() {

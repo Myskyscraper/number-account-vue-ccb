@@ -99,6 +99,10 @@ export default new Router({
             path:"/upLoadIdCard",
             name:"upLoadIdCard",
             component: resolve =>require(['@/view/openAccount/upLoadIdCard.vue'], resolve)
+        },{
+            path:"/openVerifcode",
+            name:"openVerifcode",
+            component: resolve =>require(['@/view/openAccount/openVerifcode.vue'], resolve)
         }
         
         // {

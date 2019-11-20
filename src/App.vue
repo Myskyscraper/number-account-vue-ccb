@@ -24,6 +24,7 @@ export default {
 <style>
 #app {
   background: #fff;
+  font-size: 14px;
 }
 
 </style>

@@ -11,6 +11,10 @@ const store = new Vuex.Store({
         rqs_Jrnl_No:"",//生成的第三方流水
         dataC100:{},//c100接口中返回的数据
         data1010:{},//1010接口返回数据
+        dataC101:{},//c101接口返回数据
+        dataC104:{},//c104接口返回数据
+        dataFace:{},//人脸识别返回数据
+        dataFillBasicInfo:{},//填写基础信息
         Avl_Bal:"",//首页中的金额
         openAnAccount:false,
         modFornmData:{},//修改手机号-短信校验数据
@@ -39,6 +43,15 @@ const store = new Vuex.Store({
         },
         Data1010_Change(state,val){
             state.data1010=val
+        },
+        DataC101_Change(state,val){
+            state.dataC101=val
+        },
+        DataC104_Change(state,val){
+            state.dataC101=val
+        },
+        DataFillBasicInfo_Change(state,val){
+            state.dataC101=val
         },
         Avl_Bal_Change(state,val){
             state.Avl_Bal=val

@@ -19,6 +19,8 @@ export default {
   data() {
     return {
       value: "",
+      custBankType:'',
+      bankTypeFlag:true,
       custName:'',
       custId:'',
       custMblph:'',//手机号
@@ -26,6 +28,9 @@ export default {
       custAddress:'',//地址
       jobvalue: "",
       adrvalue: "",
+      jobshowPicker: false,
+      adrshowPicker: false,
+      bankshowPicker:false,
       columns: [
         {
           values: Object.keys(citys),
@@ -40,7 +45,7 @@ export default {
     };
   },
   created () {
-    initData()
+   
   },
   methods: {
     show() {
@@ -48,10 +53,8 @@ export default {
     },
     onChange(picker, values) {
       picker.setColumnValues(1, citys[values[0]]);
-    },
-    initData(){
-      
     }
+   
   }
 };
 </script>

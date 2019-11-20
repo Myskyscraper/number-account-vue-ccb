@@ -74,10 +74,11 @@
       :value="adrvalue"
       placeholder="选择地址"
       @click="adrshowPicker = true"
-      loading
     />
 
     <van-popup v-model="adrshowPicker" position="bottom">
+
+      
       <van-picker
         show-toolbar
         :columns="adrColumns"
@@ -125,7 +126,7 @@
       type="number"
       class="bottomButton"
       :hairline="true"
-      @click="nextStep"
+      @click="submitData"
     >下一步</van-button>
   </div>
    
@@ -134,15 +135,24 @@
 
 <script>
 import cityData4 from '../../utils/city-data.js';
-let arrProvince=[];
-let arrCity=[];
+import { Dialog ,Toast} from 'vant'
+
 let cityForm={};
-let str ='';
-let arr =[];
 const citys = {
   浙江: ["杭州", "宁波", "温州", "嘉兴", "湖州"],
   福建: ["福州", "厦门", "莆田", "三明", "泉州"]
 };
+
+
+const len = cityData4.length
+for(let i=0;i<len;i++){
+  let keys = cityData4[i].text;
+  cityForm[keys] = cityData4[i].children;
+}
+
+console.log(cityForm);
+
+
 let obj={};
 export default {
   data() {
@@ -177,13 +187,13 @@ export default {
                     }],
       adrColumns: [
         {
-          values: Object.keys(citys),
+          values: Object.keys(cityForm),
           className: "column1"
         },
         {
-          values: citys["浙江"],
+          values: cityForm["山东省"],
           className: "column2",
-          defaultIndex: 2
+          defaultIndex: 0
         }
       ],
       checked: false,
@@ -216,6 +226,10 @@ export default {
     this.initData()
   },
   methods: {
+    test(val1,val2){
+      let id=val1;
+      
+    },
     back() {
       this.$router.go(-1); //返回上一层
     },
@@ -224,11 +238,21 @@ export default {
       this.jobshowPicker = false;
     },
     adronChange(picker, values) {
-      picker.setColumnValues(1, citys[values[0]]);
+      //  console.log(values)
+     
+      
+       console.log("picker",picker.getColumnValue(0));
+       console.log("picker",picker.getColumnValue(1).text);
+        
+
+       picker.setColumnValues(1, cityForm[values[0]]);
+      // console.log("picker",picker.getColumnValue());
     },
-    adronConfirm(value) { 
-      this.adrvalue = String(value); //选择地址
-      this.adrshowPicker = false;
+    adronConfirm(values) { 
+     console.log(values);
+     let val  = values[0]+values[1].text;
+     this.adrvalue = val; //选择地址
+     this.adrshowPicker = false;
     },
     bankonConfirm(value){
       this.custBankType = value.text;//选择银行
@@ -244,12 +268,9 @@ export default {
         this.dedectShowPopupFlag = true;
     },
     initData(){
-        for(let i=0;i<cityData4.length;i++){
-          obj[cityData4[i].text]=cityData4[i].children;
-        }
-
-
-
+        // for(let i=0;i<cityData4.length;i++){
+        //   obj[cityData4[i].text]=cityData4[i].children;
+        // }
       this.custBankType = this.$store.state.data1010.IssuBnk_Nm;//自动填充银行卡名称
       let bankType = this.$store.state.bankType;
       if(bankType=='105'){
@@ -258,8 +279,67 @@ export default {
           
       }
     },
-    nextStep(){
-      console.log('ok');
+    submitData(){
+     if(this.custName==""){
+       Dialog.alert({message: '输入姓名'});
+       return ;
+     }else if(this.custId==""){
+         Dialog.alert({message: '输入身份证号'});
+         return ;
+     }else if(this.custMblph==""){
+        Dialog.alert({message: '输入手机证号'});
+        return ;
+     }else if(this.custJob==""){
+        Dialog.alert({message: '输入工作类别'});
+        return ;
+     }else if(this.custAddress==""){
+        Dialog.alert({message: '输入开户地址'});
+        return ;
+     }else if(this.checked==false){
+        Dialog.alert({message: '请勾选协议'});
+        return ;
+     }else{
+        let params = {
+       " Digt_Acc_Ar_ID":'',
+       " Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
+       " Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
+       " CrdHldr_Crdt_TpCd":'1010',
+       " CrdHldr_Crdt_No":custId,
+       "CrdHldr_Crdt_Nm":custName,
+       "MblPh_No":custMblph,
+        "CntprtAcc":this.$store.state.data1010.Data.CntprtAcc,
+       " BnkCD":this.$store.state.data1010.Data.BnkCD
+      };
+      console.log("发送c101参数", params);
+      this.$store.commit("DataFillBasicInfo_Change",params);
+      this.$http(
+        "/LifeSvc/DigtAccWlt/DAWDigtAccOpnAccPrChk",
+        "P5OISC101",
+        params,
+        true,
+        true
+      )
+        .then(res => {
+          console.log("返回c101参数", res);
+          this.$store.commit(
+            "DataC100_Digt_Acc_Ar_ID_Change",
+            res.Data.Digt_Acc_Ar_ID
+          );
+
+          this.$router.push({ path:'./addPerInfo'})
+
+        })
+        .catch(err => {
+          console.log("数据请求失败", err);
+        });
+
+
+     }
+
+     
+
+
+
     }
   }
 };
