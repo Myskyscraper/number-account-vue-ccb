@@ -2,7 +2,24 @@
   <div>
     <van-nav-bar title="添加银行卡" left-arrow @click-left="back" />
     <van-cell-group>
-      <van-field v-model="bankCardNo" label="银行卡" placeholder="请输入银行卡号" type="tel"/>
+      <!-- <van-field v-model="bankCardNo" label="银行卡" placeholder="请输入银行卡号" type="tel" /> -->
+         
+
+           <div class="bank-wrap-box">
+              <span>
+                  银行卡
+              </span>
+
+              <input 
+                type="text"
+                placeholder="请输入银行卡号" 
+                :value="display_bank_account" 
+                @input="handleBankCardInput"
+              />
+
+           </div>
+
+          
     </van-cell-group>
 
     <van-button
@@ -21,46 +38,43 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
-      bankCardNo: "",
-      canFlag:true
+      canFlag: true,
+      bank_account:"",
+      display_bank_account:""
     };
   },
-  created () {
-    this.initData();
+  created() {
+      this.initData();
   },
   computed: {
-    checkCanClick:function(){
-
-      if(this.bankCardNo.length>16&&this.bankCardNo.length<20){
-        return this.canFlag =false
-      }else{
-        return this.canFlag =true
+    checkCanClick: function() {
+      if (this.bank_account.length > 16 && this.bank_account.length < 24) {
+        return (this.canFlag = false);
+      } else {
+        return (this.canFlag = true);
       }
-
-      
-    }
+    },
   },
-  mounted() {
-    
-  },
+  mounted() {},
   methods: {
     back() {
       this.$router.go(-1); //返回上一层
     },
     initData() {
       var _this = this;
-        console.log('银行卡initData', this.$store.state.dataC100.Data)
-        if (
-          this.$ccbskObj.isnull(
-            _this.$store.state.dataC100.Data.Digt_Acc_Ar_ID
-          )
-        ) {
-            this.partnerRegistra();
-        }
+      console.log("银行卡initData", this.$store.state.dataC100.Data);
+      if (
+        this.$ccbskObj.isnull(_this.$store.state.dataC100.Data.Digt_Acc_Ar_ID)
+      ) {
+        this.partnerRegistra();
+      }
+    },
+    handleBankCardInput(e) {
+      this.bank_account = e.target.value;
+      this.display_bank_account = this.bank_account.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ');
     },
     partnerRegistra() {
       var _this = this;
@@ -98,16 +112,15 @@ export default {
             "DataC100_Digt_Acc_Ar_ID_Change",
             res.Data.Digt_Acc_Ar_ID
           );
-
         })
         .catch(err => {
           console.log("数据请求失败", err);
         });
     },
     nextStep() {
-      console.log('下一步')
+      console.log("下一步");
       let params = {
-        "DbCrd_CardNo":this.bankCardNo
+        DbCrd_CardNo: this.bankCardNo.replace(/\s*/g,'')
       };
       console.log("返回1010参数", params);
       this.$http(
@@ -119,25 +132,24 @@ export default {
       )
         .then(res => {
           console.log("返回1010参数", res);
-          this.$store.commit("Data1010_Change",res);//存下1010数据
-          let bankType = res.Data.BnkCD.slice(0,3);
-          this.$store.commit('bankType_change',bankType);
-          if(bankType=="105"){
-              this.$router.push({
-                path:'./addPerInfo',
-                query:{
-                    bankType:bankType?bankType:''
-                }
-            })
-          }else{
-               this.$router.push({
-                path:'/upLoadIdCard',
-                query:{
-                    bankType:bankType?bankType:''
-                }
-              })
+          this.$store.commit("Data1010_Change", res); //存下1010数据
+          let bankType = res.Data.BnkCD.slice(0, 3);
+          this.$store.commit("bankType_change", bankType);
+          if (bankType == "105") {
+            this.$router.push({
+              path: "./addPerInfo",
+              query: {
+                bankType: bankType ? bankType : ""
+              }
+            });
+          } else {
+            this.$router.push({
+              path: "/upLoadIdCard",
+              query: {
+                bankType: bankType ? bankType : ""
+              }
+            });
           }
-         
         })
         .catch(err => {
           console.log("数据请求失败", err);
@@ -148,4 +160,20 @@ export default {
 </script>
 
 <style scoped>
+  .bank-wrap-box{
+    height: 44px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+  }
+
+   .bank-wrap-box span{
+     width: 72px;
+     padding-left:20px; 
+   }
+
+    .bank-wrap-box input{
+      flex: 1;
+    }
+
 </style>

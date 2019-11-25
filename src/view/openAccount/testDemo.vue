@@ -1,59 +1,31 @@
 <template>
   <div id="test">
-   
-
-   
-
-    <van-picker :columns="columns" @change="onChange" />
-
-
+         <input 
+              name="bank_account"  
+              type="text"  
+              :value="display_bank_account" 
+              @input="handleBankCardInput"  
+         />
   </div>
 </template>
 
 <script>
-const citys = {
-  '浙江': ['杭州', '宁波', '温州', '嘉兴', '湖州'],
-  '福建': ['福州', '厦门', '莆田', '三明', '泉州']
-};
+
 export default {
   data() {
     return {
-      value: "",
-      custBankType:'',
-      bankTypeFlag:true,
-      custName:'',
-      custId:'',
-      custMblph:'',//手机号
-      custJob:'',
-      custAddress:'',//地址
-      jobvalue: "",
-      adrvalue: "",
-      jobshowPicker: false,
-      adrshowPicker: false,
-      bankshowPicker:false,
-      columns: [
-        {
-          values: Object.keys(citys),
-          className: 'column1'
-        },
-        {
-          values: citys['浙江'],
-          className: 'column2',
-          defaultIndex: 2
-        }
-      ]
-    };
+       bank_account:'',
+      display_bank_account:''
+    }
   },
   created () {
    
   },
   methods: {
-    show() {
-      console.log(this.text.length);
+     handleBankCardInput(e) {
+      this.bank_account = e.target.value;
+      this.display_bank_account = this.bank_account.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') 
     },
-    onChange(picker, values) {
-      picker.setColumnValues(1, citys[values[0]]);
-    }
    
   }
 };
