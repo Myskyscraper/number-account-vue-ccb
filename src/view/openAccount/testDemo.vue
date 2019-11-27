@@ -36,3 +36,18 @@ export default {
   font-size: 18px;
 }
 </style>
+
+
+
+  custId = this.nvl(objc102.Data.CrdHldr_Crdt_No,objDataC101.Data.CrdHldr_Crdt_No);
+  custName = this.nvl(objc102.Data.CrdHldr_Nm,objDataC101.Data.CrdHldr_Nm);
+  custMobie
+  custGend
+
+  custIdstart
+  custIdend
+  custNation
+  custAddress
+
+
+

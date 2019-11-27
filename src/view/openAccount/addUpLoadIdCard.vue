@@ -114,7 +114,7 @@ export default {
               "DataC104_Change",
                res
             );
-             this.$router.push({ path:'./addPerInfo'});
+             this.$router.push({ path:'./openVerifcode'});
           })
           .catch(err => {
             console.log("数据请求失败", err);

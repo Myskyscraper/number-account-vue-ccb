@@ -18,8 +18,6 @@
               />
 
            </div>
-
-          
     </van-cell-group>
 
     <van-button
@@ -120,7 +118,7 @@ export default {
     nextStep() {
       console.log("下一步");
       let params = {
-        DbCrd_CardNo: this.bankCardNo.replace(/\s*/g,'')
+        DbCrd_CardNo: this.bank_account.replace(/\s*/g,'')
       };
       console.log("返回1010参数", params);
       this.$http(

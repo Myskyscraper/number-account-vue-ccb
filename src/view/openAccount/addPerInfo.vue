@@ -17,6 +17,9 @@
       @click="bankshowPicker = true"
     />
 
+
+    
+
     <van-popup v-model="bankshowPicker" position="bottom">
       <van-picker
         show-toolbar
@@ -32,7 +35,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-field v-model="custName" placeholder="请输入姓名" label="姓名" />
+      <van-field v-model="custName" placeholder="请输入姓名" label="姓名"  :value="custName" />
     </van-cell-group>
 
     <van-cell-group>
@@ -40,7 +43,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-field v-model="custId" placeholder="请输入证件号码" label="证件号码" />
+      <van-field v-model="custId" placeholder="请输入证件号码" label="证件号码" :value="custId"/>
     </van-cell-group>
 
     <van-cell-group>
@@ -159,14 +162,19 @@ export default {
     return {
       value: "",
       custBankType:'',
+      custBankSend:'',
       bankTypeFlag:true,
-      custName:'',
+      custName:'hahhaah',
       custId:'',
       custMblph:'',//手机号
       custJob:'',
       custAddress:'',//地址
       jobvalue: "",
+      jobvalueSend:'',
       adrvalue: "",
+      adrvalueSend:"",
+      cityValSend:"",
+      provinValSend:"",
       jobshowPicker: false,
       adrshowPicker: false,
       bankshowPicker:false,
@@ -226,36 +234,63 @@ export default {
     this.initData()
   },
   methods: {
-    test(val1,val2){
-      let id=val1;
-      
-    },
     back() {
       this.$router.go(-1); //返回上一层
     },
     jobonConfirm(value) {
       this.jobvalue = value.text;//选择职业
+      this.jobvalueSend = value.value;
       this.jobshowPicker = false;
     },
     adronChange(picker, values) {
       //  console.log(values)
-     
-      
        console.log("picker",picker.getColumnValue(0));
        console.log("picker",picker.getColumnValue(1).text);
-        
-
        picker.setColumnValues(1, cityForm[values[0]]);
-      // console.log("picker",picker.getColumnValue());
+     
     },
     adronConfirm(values) { 
      console.log(values);
      let val  = values[0]+values[1].text;
      this.adrvalue = val; //选择地址
+     this.cityValSend = values[1].value;
+     this.provinValSend = cityVal.slice(0,2)+"0000";
+     console.log(cityVal);
+     console.log(provinVal);
+     //this.adrvalueSend = ;
      this.adrshowPicker = false;
+    },
+    getAdrNum(){
+      let params = {
+        "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
+        "Mnplt_Tp_Ind":"5",
+        "CtyRgon_Cd":"156",
+        "Prov_AtnmsRgon_Cd":this.provinValSend,//省
+        "Urbn_Cd":this.cityValSend,//市
+        "CntyAndDstc_Cd":""
+      };
+         this.$http(
+        "/LifeSvc/DigtAccWlt/DAWDigtAccBlgInstMnt",
+        "P5OIS3007",
+        params,
+        true,
+        true
+      )
+        .then(res => {
+          console.log("返回3007参数", res);
+          this.$store.commit(
+            "dpBkInNo_Change",
+            res.Data.DpBkInNo
+          );
+
+        })
+        .catch(err => {
+          console.log("数据请求失败", err);
+        });
     },
     bankonConfirm(value){
       this.custBankType = value.text;//选择银行
+      this.custBankSend = value.value;
       this.bankshowPicker =false
     },
     showPopup(){
@@ -268,15 +303,14 @@ export default {
         this.dedectShowPopupFlag = true;
     },
     initData(){
-        // for(let i=0;i<cityData4.length;i++){
-        //   obj[cityData4[i].text]=cityData4[i].children;
-        // }
+
       this.custBankType = this.$store.state.data1010.IssuBnk_Nm;//自动填充银行卡名称
       let bankType = this.$store.state.bankType;
       if(bankType=='105'){
          
       }else{
-          
+          this.custName = this.$store.state.dataC104.Data.Idv_Nm;
+          this.custId = this.$store.state.dataC104.Data.IDCard_Nm;
       }
     },
     submitData(){
@@ -299,16 +333,17 @@ export default {
         Dialog.alert({message: '请勾选协议'});
         return ;
      }else{
-        let params = {
-       " Digt_Acc_Ar_ID":'',
-       " Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
-       " Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
-       " CrdHldr_Crdt_TpCd":'1010',
-       " CrdHldr_Crdt_No":custId,
+       this.getAdrNum();
+       let params = {
+       "Digt_Acc_Ar_ID":'',
+       "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
+       "Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
+       "CrdHldr_Crdt_TpCd":'1010',
+       "CrdHldr_Crdt_No":custId,
        "CrdHldr_Crdt_Nm":custName,
        "MblPh_No":custMblph,
-        "CntprtAcc":this.$store.state.data1010.Data.CntprtAcc,
-       " BnkCD":this.$store.state.data1010.Data.BnkCD
+       "CntprtAcc":this.$store.state.data1010.Data.CntprtAcc,
+       "BnkCD":this.$store.state.data1010.Data.BnkCD
       };
       console.log("发送c101参数", params);
       this.$store.commit("DataFillBasicInfo_Change",params);
@@ -321,12 +356,37 @@ export default {
       )
         .then(res => {
           console.log("返回c101参数", res);
+
+          // this.$store.commit(
+          //   "DataC100_Digt_Acc_Ar_ID_Change",
+          //   res.Data.Digt_Acc_Ar_ID
+          // );
+          //this.$router.push({ path:'./addPerInfo'})
+
+
+         let bankType = this.$store.state.bankType;
+         let timS = res.Data.Crdt_AvlDt_StDt;
+         let timE = res.Data.Crdt_AvlDt_EdDt;
+         let cusSex = res.Data.Gnd_Cd;
+         let cusAddress = res.Data.Digt_Acc_Ar_ID;
+
           this.$store.commit(
-            "DataC100_Digt_Acc_Ar_ID_Change",
-            res.Data.Digt_Acc_Ar_ID
+            "DataC101_Change",
+             res
           );
 
-          this.$router.push({ path:'./addPerInfo'})
+          if(bankType=="105"){
+            let passFlag = this.$ccbskObj.isnull(timS)||this.$ccbskObj.isnull(timE)||this.$ccbskObj.isnull(cusSex)||this.$ccbskObj.isnull(cusAddress); 
+            if(passFlag){
+                this.$router.push({ path:'./addUpLoadIdCard'});
+            }else{
+                this.$router.push({ path:'./openVerifcode'});
+            }
+
+          }else{
+              this.$router.push({ path:'./faceRecog'});
+          }
+
 
         })
         .catch(err => {

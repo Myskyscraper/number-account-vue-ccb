@@ -134,7 +134,7 @@ export default {
           "CntyAndDstc_Cd":"",//县区代码
           "Dtl_Adr_Cntnt":wkDtl_Adr_Cntnt,//详细地址
           "ZipECD":"",//邮政编码
-          "DpBkInNo":"",//开户机构编号
+          "DpBkInNo":this.$store.state.dpBkInNo,//开户机构编号
           "Ovrlsttn_EV_Trck_No":this.$store.state.initData.Ovrlsttn_EV_Trck_No,
           "SYS_SND_SERIAL_NO":this.$store.state.initData.SYS_SND_SERIAL_NO,
           "TrckEndToETCphrtxtVal":"",
@@ -177,7 +177,7 @@ export default {
           "Nat_Cd":"156",
           "Ethnct_Cd":custNation,
           "Ocp_Cd":"",//职业
-          "CtyRgon_Cd":"",
+          "CtyRgon_Cd":"156",
           "Prov_AtnmsRgon_Cd":"",
           "Urbn_Cd":"",
           "CntyAndDstc_Cd":"",
