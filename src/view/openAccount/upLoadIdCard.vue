@@ -1,10 +1,18 @@
 <template>
   <div id="upLoadId">
-    <p>请上传您的第二代居民身份证原件</p>
+    <van-nav-bar title="上传身份证" left-arrow @click-left="back" />
 
+    <div class="up-load-file">
+      请上传第二代身份证号原件
+    </div>
+    
     <div class="frontIdCard idCardBox" @click="takePhoto">
       身份证上传人脸
       <img :src="frontImgUrl" alt />
+    </div>
+
+    <div style="height:10px;">
+      
     </div>
 
     <div class="backIdCard idCardBox" @click="takePhotoRe">
@@ -32,27 +40,37 @@ export default {
   data() {
     return {
       frontImg: "",
-      backImg: ""
+      backImg: "",
+      testSrc:'../../assets/images/person.png'
     };
   },
   computed: {
       frontImgUrl:function(){
           if(this.frontImg==""){
-              return require('../../assets/images/person.png')
+              return require('../../assets/images/person.png');
           }else{
-               return ("data:image/png:base64,"+this.frontImg);
+               let imgSrcA = "data:image/png;base64,"+this.frontImg;
+               return require(imgSrcA);
           }
       },
       backImgUrl:function(){
           if(this.backImg==""){
               return require('../../assets/images/country.png')
           }else{
-               return ("data:image/png:base64,"+this.backImg);
+              let imgSrcB = "data:image/png;base64,"+this.backImg;
+              return require(imgSrcB);
           }
 
       }
   },
   methods: {
+    back() {
+      this.$router.go(-1); //返回上一层
+    },
+    takePhotoTest(){
+        console.log('okk');
+        this.testSrc =  require();
+    },
     takePhoto(){
       console.log("ok");
       var _this= this;
@@ -72,7 +90,6 @@ export default {
         { action: "takePhoto", compressedSize: "300" },
         function(responseData) {
           _this.backImg =  responseData.Data.image;
-        
           console.log(_this.backImg.length);
         }
       );
@@ -146,5 +163,14 @@ export default {
   top: 0;
   height: 100%;
   z-index: 2;
+}
+
+.up-load-file{
+    text-align: center;
+    line-height: 40px;
+    margin-top: 30px;
+    color: #09b6f2;
+    font-size: 16px;
+    margin-bottom: 25px;
 }
 </style>

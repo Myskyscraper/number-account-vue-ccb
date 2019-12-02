@@ -2,11 +2,6 @@
   <div id="addPerInfo">
     <van-nav-bar title="补充个人身份信息" left-arrow @click-left="back" />
 
-    <!-- <van-cell-group>
-      <van-field v-model="custBankType" placeholder="请输入银行" label="银行" />
-    </van-cell-group> -->
-
-    
     <van-field
       readonly
       clickable
@@ -16,9 +11,6 @@
       disabled="bankTypeFlag"
       @click="bankshowPicker = true"
     />
-
-
-    
 
     <van-popup v-model="bankshowPicker" position="bottom">
       <van-picker
@@ -35,7 +27,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-field v-model="custName" placeholder="请输入姓名" label="姓名"  :value="custName" />
+      <van-field v-model="custName" placeholder="请输入姓名" label="姓名"   />
     </van-cell-group>
 
     <van-cell-group>
@@ -43,7 +35,7 @@
     </van-cell-group>
 
     <van-cell-group>
-      <van-field v-model="custId" placeholder="请输入证件号码" label="证件号码" :value="custId"/>
+      <van-field v-model="custId" placeholder="请输入证件号码" label="证件号码"/>
     </van-cell-group>
 
     <van-cell-group>
@@ -68,8 +60,7 @@
       />
     </van-popup>
 
-    <!-- 111111111111111111111 -->
-
+   
     <van-field
       readonly
       clickable
@@ -93,14 +84,14 @@
 
       <div class="checkbox-wrap">
           <van-checkbox v-model="checked" style="float:left;"></van-checkbox> 
-          <span>本人声明仅为税收居民，同意</span>
+          <span>&nbsp;&nbsp;本人声明仅为税收居民，同意</span>
           <span class="colorBlue" @click="showPopup" >《多点零钱卡用户服务协议》</span>
           及 <span class="colorBlue" @click="dedectShowPopup">《委托扣款服务协议》</span>
       </div>
 
        <div class="checkbox-wrap">
              <van-checkbox v-model="longChecked" style="float:left;"></van-checkbox> 
-             <span class="colorBlue" @click="longShowPopup">《多点龙会员服务协议》</span>
+             <span class="colorBlue" @click="longShowPopup">&nbsp;&nbsp;《多点龙会员服务协议》</span>
        </div>
 
       <!-- 多点零钱协议 -->
@@ -146,14 +137,13 @@ const citys = {
   福建: ["福州", "厦门", "莆田", "三明", "泉州"]
 };
 
-
 const len = cityData4.length
 for(let i=0;i<len;i++){
   let keys = cityData4[i].text;
   cityForm[keys] = cityData4[i].children;
 }
 
-console.log(cityForm);
+// console.log(cityForm);
 
 
 let obj={};
@@ -164,7 +154,7 @@ export default {
       custBankType:'',
       custBankSend:'',
       bankTypeFlag:true,
-      custName:'hahhaah',
+      custName:'',
       custId:'',
       custMblph:'',//手机号
       custJob:'',
@@ -231,7 +221,10 @@ export default {
     };
   },
   created () {
-    this.initData()
+  
+  },
+  mounted () {
+      this.initData();
   },
   methods: {
     back() {
@@ -244,20 +237,17 @@ export default {
     },
     adronChange(picker, values) {
       //  console.log(values)
-       console.log("picker",picker.getColumnValue(0));
-       console.log("picker",picker.getColumnValue(1).text);
+      //  console.log("picker",picker.getColumnValue(0));
+      //  console.log("picker",picker.getColumnValue(1).text);
        picker.setColumnValues(1, cityForm[values[0]]);
      
     },
     adronConfirm(values) { 
-     console.log(values);
+    //  console.log(values);
      let val  = values[0]+values[1].text;
      this.adrvalue = val; //选择地址
      this.cityValSend = values[1].value;
-     this.provinValSend = cityVal.slice(0,2)+"0000";
-     console.log(cityVal);
-     console.log(provinVal);
-     //this.adrvalueSend = ;
+     this.provinValSend = this.cityValSend.slice(0,2)+"0000";
      this.adrshowPicker = false;
     },
     getAdrNum(){
@@ -303,11 +293,11 @@ export default {
         this.dedectShowPopupFlag = true;
     },
     initData(){
-
+      console.log("1010存在银行数据",this.$store.state.data1010.IssuBnk_Nm);
       this.custBankType = this.$store.state.data1010.IssuBnk_Nm;//自动填充银行卡名称
       let bankType = this.$store.state.bankType;
       if(bankType=='105'){
-         
+        
       }else{
           this.custName = this.$store.state.dataC104.Data.Idv_Nm;
           this.custId = this.$store.state.dataC104.Data.IDCard_Nm;
@@ -323,10 +313,10 @@ export default {
      }else if(this.custMblph==""){
         Dialog.alert({message: '输入手机证号'});
         return ;
-     }else if(this.custJob==""){
+     }else if(this.jobvalue==""){
         Dialog.alert({message: '输入工作类别'});
         return ;
-     }else if(this.custAddress==""){
+     }else if(this.adrvalue==""){
         Dialog.alert({message: '输入开户地址'});
         return ;
      }else if(this.checked==false){
@@ -339,10 +329,10 @@ export default {
        "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
        "Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
        "CrdHldr_Crdt_TpCd":'1010',
-       "CrdHldr_Crdt_No":custId,
-       "CrdHldr_Crdt_Nm":custName,
-       "MblPh_No":custMblph,
-       "CntprtAcc":this.$store.state.data1010.Data.CntprtAcc,
+       "CrdHldr_Crdt_No":this.custId,
+       "CrdHldr_Nm":this.custName,
+       "MblPh_No":this.custMblph,
+       "CntprtAcc":this.$store.state.data1010.Data.DbCrd_CardNo,
        "BnkCD":this.$store.state.data1010.Data.BnkCD
       };
       console.log("发送c101参数", params);
@@ -352,29 +342,19 @@ export default {
         "P5OISC101",
         params,
         true,
-        true
+        false
       )
         .then(res => {
-          console.log("返回c101参数", res);
-
-          // this.$store.commit(
-          //   "DataC100_Digt_Acc_Ar_ID_Change",
-          //   res.Data.Digt_Acc_Ar_ID
-          // );
-          //this.$router.push({ path:'./addPerInfo'})
-
-
+         console.log("返回c101参数", res);
          let bankType = this.$store.state.bankType;
          let timS = res.Data.Crdt_AvlDt_StDt;
          let timE = res.Data.Crdt_AvlDt_EdDt;
          let cusSex = res.Data.Gnd_Cd;
          let cusAddress = res.Data.Digt_Acc_Ar_ID;
-
-          this.$store.commit(
-            "DataC101_Change",
-             res
-          );
-
+         this.$store.commit(
+          "DataC101_Change",
+            res
+         );
           if(bankType=="105"){
             let passFlag = this.$ccbskObj.isnull(timS)||this.$ccbskObj.isnull(timE)||this.$ccbskObj.isnull(cusSex)||this.$ccbskObj.isnull(cusAddress); 
             if(passFlag){
@@ -386,20 +366,11 @@ export default {
           }else{
               this.$router.push({ path:'./faceRecog'});
           }
-
-
         })
         .catch(err => {
           console.log("数据请求失败", err);
         });
-
-
      }
-
-     
-
-
-
     }
   }
 };
@@ -411,7 +382,7 @@ export default {
 }
 .checkbox-wrap{
   margin-top: 10px;
-  padding: 0 10px;
+  padding: 0 17px;
  
 }
 .white-space{
@@ -419,6 +390,29 @@ export default {
 }
 .colorBlue{
   color:#09b6f2;
+}
+
+[class*=van-hairline]::after {
+    position: absolute;
+    box-sizing: border-box;
+    content: ' ';
+    pointer-events: none;
+    top: -50%;
+    right: -50%;
+    bottom: -50%;
+    left: -50%;
+    border: 0 solid transparent;
+    -webkit-transform: scale(.5);
+    transform: scale(.5);
+}
+
+.bottomButton {
+    bottom: .3rem;
+    position: absolute;
+    width: 70%;
+    margin-left: 15%;
+    border: 1px solid #ddd;
+    left: 0;
 }
 </style>
 

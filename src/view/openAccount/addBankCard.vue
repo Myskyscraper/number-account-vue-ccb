@@ -6,6 +6,7 @@
          
 
            <div class="bank-wrap-box">
+
               <span>
                   银行卡
               </span>
@@ -34,6 +35,7 @@
     >下一步</van-button>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -163,6 +165,7 @@ export default {
     display: flex;
     align-items: center;
     border-bottom: 1px solid #ddd;
+    font-size: 14px;
   }
 
    .bank-wrap-box span{

@@ -13,7 +13,7 @@
                 <span>零钱卡余额(元)</span>
                 <i>{{moneyNum}}</i>
             </div>
-            <div class="openWallet" v-show="!$store.state.openAnAccount">
+            <div class="openWallet" v-show="!$store.state.openAnAccount"  @click="test">
                 开通钱包
             </div>
         </div>
@@ -24,9 +24,15 @@
             </div>
         </van-grid>
 
-        <div class="test" @click="test">
-           测试连接
+       
+        <div style="margin-top:10px;font-size:12px;" @click="test1">
+           测试：调到开户
         </div>
+
+         <div style="margin-top:10px;font-size:12px;"  @click="test2">
+            测试：调到短信验证码
+        </div>
+
         <div class="hintbox">
             本服务由建设银行提供
         </div>
@@ -127,9 +133,13 @@ export default {
             // alert('返回')
             this.$router.push("/walletMain")
         },
-        test(){
+        test1(){
             console.log('ok')
             this.$router.push("/addBankCard")
+        },
+        test2(){
+            console.log('ok')
+            this.$router.push("/openVerifcode")
         },
         getMoneyMsg(){
             let params={
@@ -195,10 +205,6 @@ export default {
         line-height: 125px;
         color: #fff;
     }
-    .test{
-        margin-top: 30px;
-        font-size: 12px;
-    }
     .router-link-style {
         flex-basis: 33.3333%;
     }
@@ -221,7 +227,6 @@ export default {
     .hintbox{
         font-size: .12rem;color: #999;text-align: center;position: fixed;left: 0;right: 0;bottom: 1rem;margin: auto;
     }
-    
 </style>
 
 
