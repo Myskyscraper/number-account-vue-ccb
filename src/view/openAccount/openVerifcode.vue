@@ -18,7 +18,7 @@
       color="#09b6f2"
       class="bottomButton"
       :hairline="true"
-      :disabled="verCodeNo.length<6"
+      :disabled="(verCodeNo.length&&configFlag)<6"
       @click="configFn"
     >确定</van-button>
   </div>
@@ -34,7 +34,8 @@ export default {
     return {
       timeNum: 60,
       disabled: true,
-      verCodeNo: ""
+      verCodeNo: "",
+      configFlag:true
     };
   },
   computed: {
@@ -84,9 +85,7 @@ export default {
             wkEthnct_Cd = this.nvl(objDataC101.Data.Ethnct_Cd,objDataC104.Data.Ethnct_Cd);
             wkDtl_Adr_Cntnt = this.nvl(objDataC101.Data.Dtl_Adr_Cntnt,objDataC104.Data.JIZZ);
         }
-
         this.sendC102();
-
     },
     initParamBeforCall103(objc102){
        var _this = this;
@@ -114,7 +113,7 @@ export default {
             custAddress = this.nvl(objc102.Data.Dtl_Adr_Cntnt,objDataC104.Data.Dtl_Adr_Cntnt);
         }
 
-         _this.sendC103();
+        this.configFlag = false;
     },
     sendC102(){
         var _this = this;
@@ -158,7 +157,7 @@ export default {
         )
           .then(res => {
             _this.initParamBeforCall103(res);
-          
+
           })
           .catch(err => {
             console.log("失败", err);
@@ -216,7 +215,7 @@ export default {
           false
         )
           .then(res => {
-            _this.initParamBeforCall103(res)
+           
           })
           .catch(err => {
             console.log("失败", err);
@@ -303,9 +302,7 @@ export default {
       }
     },
     configFn(){
-
-
-
+       this.sendC103();
     },
     nvl(str,replace_str){
          var _this = this;

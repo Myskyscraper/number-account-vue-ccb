@@ -12,5 +12,3 @@ verificationRun();
     sendPhoneMessag();
 
 
-c103 37值
-c103 值对呢
