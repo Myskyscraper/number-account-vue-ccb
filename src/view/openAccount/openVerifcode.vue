@@ -25,9 +25,10 @@
 </template>
 
 <script>
-
+import { Dialog ,Toast} from 'vant'
 let wkCrdt_AvlDt_StDt,wkCrdt_AvlDt_EdDt,wkGnd_Cd,wkEthnct_Cd,wkDtl_Adr_Cntnt,wkCrdHldr_Crdt_No,wkCrdHldr_Nm,wkMblPh_No;
-let custId,custName,custMobie,custGend,cust_CntyAndDstc_Cd,cust_urbnCd,custIdstart,custIdend,custNation,custAddress
+let custId,custName,custMobie,custGend,cust_CntyAndDstc_Cd,cust_urbnCd,custIdstart,custIdend,custNation,custAddress,custProvAtnmsRgonCd;
+let custUrbnCd,custCntyAndDstcCd;
 export default {
   data() {
     return {
@@ -43,6 +44,9 @@ export default {
         ? "重新发送"
         : "(" + this.timeNum + ")s后重新发送";
     }
+  },
+  created () {
+    this.initParamBeforCall102();
   },
   mounted() {
     this.verificationRun();
@@ -81,6 +85,8 @@ export default {
             wkDtl_Adr_Cntnt = this.nvl(objDataC101.Data.Dtl_Adr_Cntnt,objDataC104.Data.JIZZ);
         }
 
+        this.sendC102();
+
     },
     initParamBeforCall103(objc102){
        var _this = this;
@@ -107,6 +113,8 @@ export default {
             custNation = this.nvl(objc102.Data.Ethnct_Cd,objDataC104.Data.Ethnct_Cd);
             custAddress = this.nvl(objc102.Data.Dtl_Adr_Cntnt,objDataC104.Data.Dtl_Adr_Cntnt);
         }
+
+         _this.sendC103();
     },
     sendC102(){
         var _this = this;
@@ -127,7 +135,7 @@ export default {
           "Gnd_Cd":wkGnd_Cd,
           "Nat_Cd":"156",
           "Ethnct_Cd":wkEthnct_Cd,
-          "Ocp_Cd":"",//职业代码
+          "Ocp_Cd":this.$store.state.jobValueCode,//职业代码
           "CtyRgon_Cd":"156",
           "Prov_AtnmsRgon_Cd":"",//省去
           "Urbn_Cd":"",//城市代码
@@ -149,8 +157,8 @@ export default {
           false
         )
           .then(res => {
-
-            _this.initParamBeforCall103(res)
+            _this.initParamBeforCall103(res);
+          
           })
           .catch(err => {
             console.log("失败", err);
@@ -176,15 +184,15 @@ export default {
           "Gnd_Cd":custGend,
           "Nat_Cd":"156",
           "Ethnct_Cd":custNation,
-          "Ocp_Cd":"",//职业
+          "Ocp_Cd":this.$store.state.jobValueCode,//职业
           "CtyRgon_Cd":"156",
           "Prov_AtnmsRgon_Cd":"",
           "Urbn_Cd":"",
           "CntyAndDstc_Cd":"",
-          "Dtl_Adr_Cntnt":"",
-          "ZipECD":"",
-          "DpBkInNo":"",
-          "SMS_Vld_CD":"",
+          "Dtl_Adr_Cntnt":custAddress,
+          "ZipECD":this.$store.state.initData.ZipECD,
+          "DpBkInNo":this.$store.state.dpBkInNo,
+          "SMS_Vld_CD":this.verCodeNo,
           "Ovrlsttn_EV_Trck_No":"",
           "SYS_SND_SERIAL_NO":"",
           "UQPS_Eqmt_Modl":"",
@@ -219,8 +227,8 @@ export default {
       if (!this.disabled) {
         return;
       }
-      // this.verificationNum();
-      //this.sendPhoneMessag();
+       this.verificationNum();
+       this.sendPhoneMessag();
     },
     verificationNum: function() {
       if (this.timeNum > 0) {
@@ -236,12 +244,12 @@ export default {
       if (this.$store.state.bankType == "105") {
         // 本行的发短信验证
         let params = {
-          " Digt_Acc_Ar_ID": "",
-          " Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
-          " Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
-          " Rltv_Bnk_AccNo": this.$store.state.dataC101.Data.CntprtAcc,
-          MblPh_No: this.$store.state.dataC101.Data.MblPh_No,
-          " Digt_Acc_Bsn_Scn_TpCd": "0001"
+          "Digt_Acc_Ar_ID": "",
+          "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
+          "Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
+          "Rltv_Bnk_AccNo": this.$store.state.dataC101.Data.CntprtAcc,
+          "MblPh_No": this.$store.state.dataC101.Data.MblPh_No,
+          "Digt_Acc_Bsn_Scn_TpCd": "0001"
         };
         this.$http(
           "/LifeSvc/DigtAccWlt/DAWDigtAccSMSVldCDSnd",
@@ -266,14 +274,14 @@ export default {
           Digt_Acc_Ar_ID: "",
           Prtn_Chnl_ID: this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
           Prtn_Mbsh_ID: this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
-          BnkCD: "", //联行号
-          IssuBnk_Nm: "", //银行名称
+          BnkCD: this.$store.state.data1010.Data.BnkCD, //联行号
+          IssuBnk_Nm: this.$store.state.data1010.Data.IssuBnk_Nm, //银行名称
           Crdt_TpCd: "1010", //证件类型代码
-          Crdt_No: "", //证件号码
+          Crdt_No:"", //证件号码
           Idv_Lgl_Nm: "",
-          MblPh_No: "",
-          DbCrd_CardNo: "",
-          DpBkinNo: "",
+          MblPh_No:this.$store.state.dataC101.Data.MblPh_No,
+          DbCrd_CardNo: this.$store.state.data1010.Data.DbCrd_CardNo,
+          DpBkinNo: this.$store.state.dpBkInNo
         };
         this.$http(
           "/LifeSvc/DigtAccWlt/DAWPyAgrmSMSSignTrgr",

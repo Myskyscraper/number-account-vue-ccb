@@ -21,7 +21,8 @@ const store = new Vuex.Store({
         deleteFlag:false,//删除银行卡开关，控制只有一个列能滑动
         addressesData:{},//未开户时调用地址接口返回的数据
         bankType:'',//开户判断本行105 他行非105
-        dpBkInNo:''//
+        dpBkInNo:'',//开户机构行政编号
+        jobValueCode:''//职业机构代码
     },
     mutations: {
         showLoading(state,isLoad) {
@@ -74,6 +75,9 @@ const store = new Vuex.Store({
         },
         dpBkInNo_change(state,val){
             state.dpBkInNo = val;
+        },
+        jobValueCode_change(state,val){
+            state.jobValueCode = val;
         }
     },
     actions: {}

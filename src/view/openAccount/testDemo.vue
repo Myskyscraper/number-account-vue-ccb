@@ -1,32 +1,47 @@
 <template>
   <div id="test">
-         <input 
-              name="bank_account"  
-              type="text"  
-              :value="display_bank_account" 
-              @input="handleBankCardInput"  
-         />
+ 
+
+    <div @click="show">hahhahha</div>
+    <p>{{testDemo}}</p>
+
+    <van-field
+      readonly
+      clickable
+      label="银行"
+      :value="testDemo"
+      placeholder="请输入银行"
+      
+    />
   </div>
 </template>
 
 <script>
-
+let str;
 export default {
   data() {
     return {
-       bank_account:'',
-      display_bank_account:''
-    }
+      bank_account: "",
+      display_bank_account: "",
+      testDemo: "gagggagagag"
+    };
   },
-  created () {
-   
+  created() {
+    this.initData();
   },
   methods: {
-     handleBankCardInput(e) {
-      this.bank_account = e.target.value;
-      this.display_bank_account = this.bank_account.replace(/\s/g, '').replace(/(\d{4})(?=\d)/g, '$1 ') 
-    },
    
+    initData() {
+      if (false) {
+        str = 1;
+      } else {
+        str = 2;
+      }
+      this.testDemo = this.$store.state.data1010.IssuBnk_Nm;
+    },
+    show() {
+      console.log(str);
+    }
   }
 };
 </script>
@@ -39,15 +54,7 @@ export default {
 
 
 
-  custId = this.nvl(objc102.Data.CrdHldr_Crdt_No,objDataC101.Data.CrdHldr_Crdt_No);
-  custName = this.nvl(objc102.Data.CrdHldr_Nm,objDataC101.Data.CrdHldr_Nm);
-  custMobie
-  custGend
-
-  custIdstart
-  custIdend
-  custNation
-  custAddress
+  
 
 
 

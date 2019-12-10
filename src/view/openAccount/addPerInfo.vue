@@ -1,7 +1,7 @@
 <template>
   <div id="addPerInfo">
     <van-nav-bar title="补充个人身份信息" left-arrow @click-left="back" />
-
+    
     <van-field
       readonly
       clickable
@@ -10,6 +10,7 @@
       placeholder="请输入银行"
       disabled="bankTypeFlag"
       @click="bankshowPicker = true"
+      class="colorStr"
     />
 
     <van-popup v-model="bankshowPicker" position="bottom">
@@ -52,6 +53,7 @@
     />
 
     <van-popup v-model="jobshowPicker" position="bottom">
+
       <van-picker
         show-toolbar
         :columns="jobColumns"
@@ -82,6 +84,10 @@
       />
     </van-popup>
 
+    <div style="height:20px;"> </div>
+
+   
+
       <div class="checkbox-wrap">
           <van-checkbox v-model="checked" style="float:left;"></van-checkbox> 
           <span>&nbsp;&nbsp;本人声明仅为税收居民，同意</span>
@@ -89,10 +95,13 @@
           及 <span class="colorBlue" @click="dedectShowPopup">《委托扣款服务协议》</span>
       </div>
 
+        <div style="height:10px;"> </div>
+
        <div class="checkbox-wrap">
              <van-checkbox v-model="longChecked" style="float:left;"></van-checkbox> 
              <span class="colorBlue" @click="longShowPopup">&nbsp;&nbsp;《多点龙会员服务协议》</span>
        </div>
+
 
       <!-- 多点零钱协议 -->
      <van-popup v-model="showPopupFlag">
@@ -109,7 +118,6 @@
       <van-popup v-model="longShowPopupFlag">
        龙会员服务内容
      </van-popup>
-
 
        <van-button
       size="normal"
@@ -233,6 +241,7 @@ export default {
     jobonConfirm(value) {
       this.jobvalue = value.text;//选择职业
       this.jobvalueSend = value.value;
+      this.$store.commit("jobValueCode_change",value.value);
       this.jobshowPicker = false;
     },
     adronChange(picker, values) {
@@ -264,7 +273,7 @@ export default {
         "P5OIS3007",
         params,
         true,
-        true
+        false
       )
         .then(res => {
           console.log("返回3007参数", res);
@@ -272,7 +281,6 @@ export default {
             "dpBkInNo_Change",
             res.Data.DpBkInNo
           );
-
         })
         .catch(err => {
           console.log("数据请求失败", err);
@@ -281,7 +289,7 @@ export default {
     bankonConfirm(value){
       this.custBankType = value.text;//选择银行
       this.custBankSend = value.value;
-      this.bankshowPicker =false
+      this.bankshowPicker =false;
     },
     showPopup(){
         this.showPopupFlag =true ; 
@@ -293,8 +301,8 @@ export default {
         this.dedectShowPopupFlag = true;
     },
     initData(){
-      console.log("1010存在银行数据",this.$store.state.data1010.IssuBnk_Nm);
-      this.custBankType = this.$store.state.data1010.IssuBnk_Nm;//自动填充银行卡名称
+      console.log("1010银行类别33",this.$store.state.data1010.Data.IssuBnk_Nm);
+      this.custBankType = this.$store.state.data1010.Data.IssuBnk_Nm;//自动填充银行卡名称
       let bankType = this.$store.state.bankType;
       if(bankType=='105'){
         
@@ -413,6 +421,13 @@ export default {
     margin-left: 15%;
     border: 1px solid #ddd;
     left: 0;
+}
+
+.van-field__control:disabled{
+  
+}
+.colorStr{
+  color: #323233!important;
 }
 </style>
 

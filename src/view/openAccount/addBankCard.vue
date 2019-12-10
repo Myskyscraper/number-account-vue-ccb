@@ -65,7 +65,7 @@ export default {
     },
     initData() {
       var _this = this;
-      console.log("银行卡initData", this.$store.state.dataC100.Data);
+      console.log("打印c100的数据", this.$store.state.dataC100.Data);
       if (
         this.$ccbskObj.isnull(_this.$store.state.dataC100.Data.Digt_Acc_Ar_ID)
       ) {

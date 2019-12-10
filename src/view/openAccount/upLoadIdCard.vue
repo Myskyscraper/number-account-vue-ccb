@@ -8,7 +8,7 @@
     
     <div class="frontIdCard idCardBox" @click="takePhoto">
       身份证上传人脸
-      <img :src="frontImgUrl" alt />
+      <img :src="frontImg" />
     </div>
 
     <div style="height:10px;">
@@ -17,7 +17,7 @@
 
     <div class="backIdCard idCardBox" @click="takePhotoRe">
       身份证上传国徽面
-      <img :src="backImgUrl" alt />
+      <img :src="backImg" />
     </div>
 
     <van-button
@@ -35,41 +35,45 @@
 </template>
 
 <script>
-
+import { Dialog ,Toast} from 'vant';
+let photoSend;
+let photoreSend;
+let frontFlag = true;
+let backFlag = true;
 export default {
   data() {
     return {
-      frontImg: "",
-      backImg: "",
-      testSrc:'../../assets/images/person.png'
+      frontImg:require('../../assets/images/person.png'),
+      backImg: require('../../assets/images/country.png')
     };
   },
   computed: {
-      frontImgUrl:function(){
-          if(this.frontImg==""){
-              return require('../../assets/images/person.png');
-          }else{
-               let imgSrcA = "data:image/png;base64,"+this.frontImg;
-               return require(imgSrcA);
-          }
-      },
-      backImgUrl:function(){
-          if(this.backImg==""){
-              return require('../../assets/images/country.png')
-          }else{
-              let imgSrcB = "data:image/png;base64,"+this.backImg;
-              return require(imgSrcB);
-          }
+      // frontImgUrl:function(){
+      //     if(this.frontImg==""){
+      //         return require('../../assets/images/person.png');
+      //     }else{
+      //          let imgSrcA = "data:image/png;base64,"+this.frontImg;
+      //          return require(imgSrcA);
+      //     }
+      // },
+      // backImgUrl:function(){
+      //     if(this.backImg==""){
+      //         return require('../../assets/images/country.png')
+      //     }else{
+      //         let imgSrcB = "data:image/png;base64,"+this.backImg;
+      //         return require(imgSrcB);
+      //     }
 
-      }
+      // }
   },
   methods: {
     back() {
       this.$router.go(-1); //返回上一层
     },
-    takePhotoTest(){
+    testChangeSrc(){
         console.log('okk');
-        this.testSrc =  require();
+        let sss = 'data:image/png;base64,'+'R0lGODlhWAAfAJEAAAAAAP////8AAGZmZiH5BAAHAP8ALAAAAABYAB8AAALfhI+py+0PX5i02ouz3rxn44XiSHJgiaYqdq7uK7bwTFtyjcN3zqd7D4wBgkTSr4i87AQCCrPCfFoG1IGIWqtabUOLNPCVfgNY8rZTzp4py+Yk7B6nL9pp3T6f3O3KLrQJ6OYlqLdGUTaHuKZYwcjHdfEUOEh4aGiW4Vi4acnZeNkGBlb5Ror5mbmVqLrISgfq9zcqO4uxmup5enuKChk56RRHqKnbmktMnDvxI1kZRbpnmZccXTittXaUtB2gzY3k/U0ULg5EXs5zjo6jvk7T7q4TGz8+T28eka+/zx9RAAA7';
+        this.frontImg = sss;
     },
     takePhoto(){
       console.log("ok");
@@ -77,9 +81,11 @@ export default {
       window.WebViewJavascriptBridge.callHandler(
         "invoke",
         { action: "takePhoto", compressedSize: "300" },
-        function(responseData) {
-         _this.frontImg =  responseData.Data.image;
-          console.log(_this.frontImg.length);
+        function(responseData) { 
+          frontFlag = false;
+          photoSend = responseData.Data.image;
+         _this.frontImg ='data:image/png;base64,'+responseData.Data.image;
+         
         }
       );
     },
@@ -89,18 +95,19 @@ export default {
         "invoke",
         { action: "takePhoto", compressedSize: "300" },
         function(responseData) {
-          _this.backImg =  responseData.Data.image;
-          console.log(_this.backImg.length);
+          backFlag = false;
+          photoreSend = responseData.Data.image;
+          _this.backImg = 'data:image/png;base64,'+responseData.Data.image;
         }
       );
     },
     submitData() {
      console.log(this.$store.state.initData);
       var _this = this;
-      if (this.$ccbskObj.isnull(_this.frontImg)) {
+      if (frontFlag ==true) {
         Dialog.alert({ message: "请拍摄身份证正面照" });
         return;
-      } else if (this.$ccbskObj.isnull(_this.backImg)) {
+      } else if (backFlag ==true) {
         Dialog.alert({ message: "请拍摄身份证国徽面" });
         return;
       } else {
@@ -109,12 +116,12 @@ export default {
             Prtn_Chnl_ID: this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
             Prtn_Mbsh_ID: this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
             MblPh_No:this.$store.state.initData.mblphNo,
-            IDCard_No:this.$store.state.initData.IDCard_No,
+            IDCard_No:"",//this.$store.state.initData.IDCard_No
             FRONT_INFO:{
-                base64_Pic_Txn_Inf:this.frontImg
+                base64_Pic_Txn_Inf:photoSend
             },
             OPPOSITE_INFO:{
-                 base64_Pic_Txn_Inf:this.backImg
+                 base64_Pic_Txn_Inf:photoreSend
             }
         };
          console.log("发送c104参数", params);
@@ -123,7 +130,7 @@ export default {
           "P5OISC104",
           params,
           true,
-          true
+          false
         )
           .then(res => {
             console.log("返回c104参数", res);
@@ -135,6 +142,7 @@ export default {
           })
           .catch(err => {
             console.log("数据请求失败", err);
+            //Dialog.alert({message: err});
           });
       }
     }
@@ -143,6 +151,7 @@ export default {
 </script>
 
 <style>
+
 * {
   font-size: 14px;
 }
@@ -162,6 +171,7 @@ export default {
   left: 0;
   top: 0;
   height: 100%;
+  width: 100%;
   z-index: 2;
 }
 
@@ -173,4 +183,10 @@ export default {
     font-size: 16px;
     margin-bottom: 25px;
 }
+
+.van-cell { 
+    padding: 12px 16px;
+}
+
+
 </style>
