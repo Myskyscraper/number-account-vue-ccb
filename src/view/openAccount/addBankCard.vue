@@ -140,6 +140,9 @@ export default {
               path: "./addPerInfo",
               query: {
                 bankType: bankType ? bankType : ""
+              },
+              meta:{
+                keepAlive:true
               }
             });
           } else {
@@ -147,6 +150,9 @@ export default {
               path: "/upLoadIdCard",
               query: {
                 bankType: bankType ? bankType : ""
+              },
+               meta:{
+                keepAlive:true
               }
             });
           }

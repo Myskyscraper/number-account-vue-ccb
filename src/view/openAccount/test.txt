@@ -1,14 +1,22 @@
+
+
+
+-----------------------------
+initData();   
+  callC206()
+
 initParamBeforCall102()
 
   sendC102()
-
         initParamBeforCall103();
 
-            sendC103();
+           
 -----------------------------
 
 verificationRun();
 
     sendPhoneMessag();
 
-
+-----------------------------
+        
+        sendC103();

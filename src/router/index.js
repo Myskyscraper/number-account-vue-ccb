@@ -107,6 +107,10 @@ export default new Router({
             path:"/addUpLoadIdCard",
             name:"addUpLoadIdCard",
             component: resolve =>require(['@/view/openAccount/addUpLoadIdCard.vue'], resolve)
+        },{
+            path:"/faceRecog",
+            name:"faceRecog",
+            component: resolve =>require(['@/view/openAccount/faceRecog.vue'], resolve)
         }
         
         // {
@@ -116,3 +120,5 @@ export default new Router({
         // }
     ]
 })
+
+

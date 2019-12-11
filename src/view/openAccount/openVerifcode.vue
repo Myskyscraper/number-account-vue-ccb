@@ -18,7 +18,7 @@
       color="#09b6f2"
       class="bottomButton"
       :hairline="true"
-      :disabled="(verCodeNo.length&&configFlag)<6"
+      :disabled="(verCodeNo.length<6)&&configFlag&&c206Flag"
       @click="configFn"
     >确定</van-button>
   </div>
@@ -29,13 +29,15 @@ import { Dialog ,Toast} from 'vant'
 let wkCrdt_AvlDt_StDt,wkCrdt_AvlDt_EdDt,wkGnd_Cd,wkEthnct_Cd,wkDtl_Adr_Cntnt,wkCrdHldr_Crdt_No,wkCrdHldr_Nm,wkMblPh_No;
 let custId,custName,custMobie,custGend,cust_CntyAndDstc_Cd,cust_urbnCd,custIdstart,custIdend,custNation,custAddress,custProvAtnmsRgonCd;
 let custUrbnCd,custCntyAndDstcCd;
+let custlwEfr_Inst_Nm = '';
 export default {
   data() {
     return {
       timeNum: 60,
       disabled: true,
       verCodeNo: "",
-      configFlag:true
+      configFlag:true,
+      c206Flag:false
     };
   },
   computed: {
@@ -47,7 +49,7 @@ export default {
     }
   },
   created () {
-    this.initParamBeforCall102();
+    this.initData();
   },
   mounted() {
     this.verificationRun();
@@ -57,7 +59,24 @@ export default {
       this.$router.go(-1);
     },
     initData(){
-        
+
+      if(this.$store.state.bankType == "105"){
+        this.c206Flag = true;
+        var count = 0;
+        manyTimeAsk = setInterval(()=>{
+          count+=1;
+          if(count>5){
+              clearInterval(manyTimeAsk);
+
+          }else{
+            this.callC206();
+          }
+
+        },10000);
+
+
+      }
+      this.initParamBeforCall102(); 
     },
     initParamBeforCall102(){
         var _this= this;
@@ -101,6 +120,9 @@ export default {
             custGend =  objc102.Data.Urbn_Cd;
         }
 
+        if(!this.$ccbskObj.isnull(objDataC104)){
+          custlwEfr_Inst_Nm = objDataC104.lwEfr_Inst_Nm;
+        }
         if(this.$ccbskObj.isnull(objDataC104)){
             custIdstart = objc102.Data.Crdt_AvlDt_StDt;
             custIdend = objc102.Data.Crdt_AvlDt_EdDt;
@@ -112,7 +134,10 @@ export default {
             custNation = this.nvl(objc102.Data.Ethnct_Cd,objDataC104.Data.Ethnct_Cd);
             custAddress = this.nvl(objc102.Data.Dtl_Adr_Cntnt,objDataC104.Data.Dtl_Adr_Cntnt);
         }
-
+        Prov_AtnmsRgon_Cd = this.nvl(objc102.Prov_AtnmsRgon_Cd,""); 
+        Urbn_Cd =  this.nvl(objc102.Urbn_Cd,""); 
+        CntyAndDstc_Cd = this.nvl(objc102.CntyAndDstc_Cd,""); 
+        this.$store.commit("DataC104_Change","{}"); //清空c104的值
         this.configFlag = false;
     },
     sendC102(){
@@ -179,15 +204,15 @@ export default {
           "MblPh_No":custMobie,
           "Crdt_AvlDt_StDt":custIdstart,
           "Crdt_AvlDt_EdDt":custIdend,
-          "IssuCtf_Ahr_Nm":"",
+          "IssuCtf_Ahr_Nm":custlwEfr_Inst_Nm,
           "Gnd_Cd":custGend,
           "Nat_Cd":"156",
           "Ethnct_Cd":custNation,
           "Ocp_Cd":this.$store.state.jobValueCode,//职业
           "CtyRgon_Cd":"156",
-          "Prov_AtnmsRgon_Cd":"",
-          "Urbn_Cd":"",
-          "CntyAndDstc_Cd":"",
+          "Prov_AtnmsRgon_Cd":Prov_AtnmsRgon_Cd,
+          "Urbn_Cd":Urbn_Cd,
+          "CntyAndDstc_Cd":CntyAndDstc_Cd,
           "Dtl_Adr_Cntnt":custAddress,
           "ZipECD":this.$store.state.initData.ZipECD,
           "DpBkInNo":this.$store.state.dpBkInNo,
@@ -208,8 +233,8 @@ export default {
         }
 
          this.$http(
-          "/LifeSvc/DigtAccWlt/DigtAccCsInfMnt",
-          "P5OISC102",
+          "/LifeSvc/DigtAccWlt/DAWDigtAccAEst",
+          "P5OISC103",
           params,
           true,
           false
@@ -300,6 +325,56 @@ export default {
             Toast(err.Head.SYS_RESP_DESC);
           });
       }
+    },
+    callC206(){
+      var _this = this;
+      let params ={
+        "Digt_Acc_Ar_ID":this.$store.state.data1010.Data.Digt_Acc_Ar_ID,
+        "Ovrlsttn_EV_Trck_No":this.$store.state.data1010.Data.Ovrlsttn_EV_Trck_No,
+        "SYS_SND_SERIAL_NO":this.$store.state.data1010.Data.SYS_SND_SERIAL_NO
+      };
+       this.$http(
+          "/LifeSvc/DigtAccWlt/DAWDigtAccUdtPBCAschnInf",
+          "P5OISC206",
+          params,
+          true,
+          false
+        )
+          .then(res => {
+            var rspCdDsc = res.Head.Txn_Rsp_Cd_Dsc;
+            var rspInf = res.Head.Txn_Rsp_Inf;
+            c206seq = res.Head.Sys_Evt_Trace_Id;
+            if(rspInf =="success"){
+
+              var status = res.Data.PBC_Bsn_StCd;
+              var restus = res.Data.ClrAc_StCd;
+
+              if(status =="PR09"){
+                var rqn = "流水号"+c206seq;
+                if(isnull(c206seq)){
+                    rqn = "流水号:"+rqs_Jrnl_No;
+                }
+                var errorcode ="";
+                var errorDesc = "您的信息在人行验证失败，请稍后重试";
+                router.push({
+                            path:"/loadErr",
+                            query:{
+                                rspCdDsc:errorDesc,
+                                rqs_Jrnl_No:errorcode,
+                                rspInf:rqn
+                            }
+                        })
+
+              } else if((status=="PR05")&&(restus=="AS07")){
+                    clearInterval(manyTimeAsk);
+                    _this.c206Flag = false;
+              } 
+            }
+          })
+          .catch(err => {
+            console.log("失败", err);
+            Toast(err.Head.SYS_RESP_DESC);
+          });
     },
     configFn(){
        this.sendC103();

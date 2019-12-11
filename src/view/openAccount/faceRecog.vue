@@ -9,7 +9,7 @@
       type="number"
       class="bottomButton"
       :hairline="true"
-      @click="submitData"
+      @click="faceRecog"
     >点击进行人脸识别</van-button>
   </div>
 </template>
@@ -23,12 +23,13 @@ export default {
     },
     methods: {
         faceRecog(){
-            var dataToSDK={"Cst_Nm":"","Crdt_No":"","phone":"","CstId":"","commAuthFields":""};
+            var _this = this;
+            let objDataC101 = this.$store.state.dataC101;
+            var dataToSDK={"Cst_Nm":objDataC101.Data.CrdHldr_Nm,"Crdt_No":objDataC101.Data.CrdHldr_Crdt_No,"phone":objDataC101.Data.MblPh_No,"CstId":"","commAuthFields":""};
             window.WebViewJavascriptBridge.callHandler('invoke',{'action':'faceIdentifyWithCstId','param':dataToSDK},function(responseData){
                 if(responseData.Data.Cnp_Rslt_Ind =="SUCCESS"){
-                    
+                     _this.$router.push({ path:'./faceRecog'});
                 }
-
             })
 
         }   
@@ -38,3 +39,4 @@ export default {
 
 <style scoped>
 </style>
+
