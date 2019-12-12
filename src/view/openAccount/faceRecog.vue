@@ -1,5 +1,6 @@
 <template>
   <div id="face_recog">
+    
     <van-button
       size="normal"
       plain

@@ -1,18 +1,25 @@
 <template>
   <div id="test">
- 
 
-    <div @click="show">hahhahha</div>
-    <p>{{testDemo}}</p>
+      <van-nav-bar title="补充个人身份信息" left-arrow @click-left="back" />
 
-    <van-field
-      readonly
-      clickable
-      label="银行"
-      :value="testDemo"
-      placeholder="请输入银行"
+   
+            <input type="text" name="" id="">
+     
+
+    <div>
+            <router-link to="./addPerInfo"> 跳转到个人信息页面</router-link>
+    </div>
+
+    <div @click="link">
+        测试事件
+    </div>
+
+            
       
-    />
+
+      
+
   </div>
 </template>
 
@@ -21,27 +28,25 @@ let str;
 export default {
   data() {
     return {
-      bank_account: "",
-      display_bank_account: "",
-      testDemo: "gagggagagag"
+     
     };
   },
   created() {
-    this.initData();
+    
   },
   methods: {
-   
-    initData() {
-      if (false) {
-        str = 1;
-      } else {
-        str = 2;
-      }
-      this.testDemo = this.$store.state.data1010.IssuBnk_Nm;
+    back() {
+      this.$router.go(-1); //返回上一层
     },
-    show() {
-      console.log(str);
+    link(){
+        this.$router.push({
+              path: "./addPerInfo",
+              meta:{
+                keepAlive:true
+              }
+            });
     }
+    
   }
 };
 </script>
@@ -49,6 +54,9 @@ export default {
 <style scoped>
 * {
   font-size: 18px;
+}
+input{
+  border: 1px solid red;
 }
 </style>
 

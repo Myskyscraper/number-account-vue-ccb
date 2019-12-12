@@ -89,35 +89,18 @@
    
 
       <div class="checkbox-wrap">
-          <van-checkbox v-model="checked" style="float:left;"></van-checkbox> 
+          <van-checkbox v-model="residChecked" style="float:left;"></van-checkbox> 
           <span>&nbsp;&nbsp;本人声明仅为税收居民，同意</span>
-          <span class="colorBlue" @click="showPopup" >《多点零钱卡用户服务协议》</span>
-          及 <span class="colorBlue" @click="dedectShowPopup">《委托扣款服务协议》</span>
+          <span class="colorBlue" >《多点零钱卡用户服务协议》</span>
+          及 <span class="colorBlue" >《委托扣款服务协议》</span>
       </div>
 
         <div style="height:10px;"> </div>
 
        <div class="checkbox-wrap">
              <van-checkbox v-model="longChecked" style="float:left;"></van-checkbox> 
-             <span class="colorBlue" @click="longShowPopup">&nbsp;&nbsp;《多点龙会员服务协议》</span>
+             <span class="colorBlue" >&nbsp;&nbsp;《多点龙会员服务协议》</span>
        </div>
-
-
-      <!-- 多点零钱协议 -->
-     <van-popup v-model="showPopupFlag">
-       内容内容内容内容内容内容内容内容内容
-     </van-popup>
-
-
-     <!-- 委托扣款协议 -->
-      <van-popup v-model="dedectShowPopupFlag">
-       委托扣款协议委托扣款协议委托扣款协议委托扣款协议
-     </van-popup>
-     
-      <!-- 龙会员内容 -->
-      <van-popup v-model="longShowPopupFlag">
-       龙会员服务内容
-     </van-popup>
 
        <van-button
       size="normal"
@@ -173,6 +156,8 @@ export default {
       adrvalueSend:"",
       cityValSend:"",
       provinValSend:"",
+      longChecked:false,
+      residChecked:false,
       jobshowPicker: false,
       adrshowPicker: false,
       bankshowPicker:false,
@@ -203,10 +188,6 @@ export default {
         }
       ],
       checked: false,
-      showPopupFlag:false,
-      longChecked:false,
-      longShowPopupFlag:false,
-      dedectShowPopupFlag:false,
       bankList:[{
           value:'10410000004',
           text:'中国银行'
@@ -290,15 +271,6 @@ export default {
       this.custBankType = value.text;//选择银行
       this.custBankSend = value.value;
       this.bankshowPicker =false;
-    },
-    showPopup(){
-        this.showPopupFlag =true ; 
-    },
-    longShowPopup(){
-        this.longShowPopupFlag = true;
-    },
-    dedectShowPopup(){
-        this.dedectShowPopupFlag = true;
     },
     initData(){
       console.log("1010银行类别33",this.$store.state.data1010.Data.IssuBnk_Nm);

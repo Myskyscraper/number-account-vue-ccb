@@ -1,6 +1,7 @@
 <template>
     <div id="loadErr">
         <div class="title">
+            <i @click="closeWeb">X</i>
             <span @click="back">返回</span>
         </div>
         <div class="errmain">
@@ -53,6 +54,12 @@ export default {
         back(){
             this.$router.go(-1)
         },
+        closeWeb(){
+            window.WebViewJavascriptBridge.callHandler('invoke', {"action":"closeWebView"}, function(responseData) {
+
+		        }
+	        );
+        }
         
     }
     
@@ -65,6 +72,9 @@ export default {
     }
     .title span{
         float: right;padding: 0 .15rem;
+    }
+    .title i{
+        float: left;padding: 0 .15rem;
     }
     .errmain{
         position: relative;

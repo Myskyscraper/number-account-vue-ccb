@@ -90,7 +90,10 @@ export default new Router({
         },{
             path:"/testDemo",
             name:"testDemo",
-            component: resolve =>require(['@/view/openAccount/testDemo.vue'], resolve)
+            component: resolve =>require(['@/view/openAccount/testDemo.vue'], resolve),
+            meta:{
+                keepAlive:true
+            }
         },{
             path:"/addPerInfo",
             name:"addPerInfo",
@@ -110,7 +113,10 @@ export default new Router({
         },{
             path:"/faceRecog",
             name:"faceRecog",
-            component: resolve =>require(['@/view/openAccount/faceRecog.vue'], resolve)
+            component: resolve =>require(['@/view/openAccount/faceRecog.vue'], resolve),
+            meta:{
+                keepAlive:true
+            }
         }
         
         // {
