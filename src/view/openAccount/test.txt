@@ -22,4 +22,21 @@ verificationRun();
         sendC103();
 -----------------------------
 
+_this.$ccbskObj.isnullsetVal(str)
+
 c102ReadyFlag
+
+longMemberFlag:'01',
+faceAgreOpenFlag:"0"
+
+UQPS_Eqmt_Modl
+UQPS_Eqmt_Lng
+UQPS_Adr
+UQPSMAC_Adr
+UQPSSIM_Eqmt_No
+UQPSGPS_LO
+UQPSSIM_CrdNo_CD
+UQPSSIM_Crd_Num
+ASPD_ID
+ASPD_Ditm_ID
+TrckEndToETCphrtxtVal

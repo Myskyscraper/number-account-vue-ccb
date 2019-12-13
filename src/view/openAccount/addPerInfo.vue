@@ -270,6 +270,7 @@ export default {
       this.bankshowPicker =false;
     },
     initData(){
+      
       console.log("1010银行类别33",this.$store.state.data1010.Data.IssuBnk_Nm);
       this.custBankType = this.$store.state.data1010.Data.IssuBnk_Nm;//自动填充银行卡名称
       let bankType = this.$store.state.bankType;

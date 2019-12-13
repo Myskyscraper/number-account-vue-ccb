@@ -32,7 +32,7 @@ export default {
     };
   },
   created() {
-    
+    this.test()
   },
   methods: {
     back() {
@@ -47,7 +47,10 @@ export default {
             });
     },
     test(){
-       
+        if (true) {
+         this.$store.commit("loadTextChange", "正在加载"); //loading显示的文字
+         this.$store.commit("showLoading", true); //打开loading图
+      }
     }
   }
 };

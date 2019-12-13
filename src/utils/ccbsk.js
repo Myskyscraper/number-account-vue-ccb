@@ -121,6 +121,15 @@ export const ccbskObj = {
     }
     return false;
   },
+
+  isnullsetVal: function (value) {
+    if (typeof value == "undefined" || value == null || value == "") {
+      return "";
+    }
+    return value;
+  },
+
+
   // showCardNo:function(cardno) {
   //     if (this.isnull(cardno)) {
   //         return "";

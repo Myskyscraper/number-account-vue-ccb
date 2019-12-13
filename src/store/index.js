@@ -22,7 +22,9 @@ const store = new Vuex.Store({
         addressesData:{},//未开户时调用地址接口返回的数据
         bankType:'',//开户判断本行105 他行非105
         dpBkInNo:'',//开户机构行政编号
-        jobValueCode:''//职业机构代码
+        jobValueCode:'',//职业机构代码
+        longMemberFlag:'01',
+        faceAgreOpenFlag:"0"
     },
     mutations: {
         showLoading(state,isLoad) {
@@ -78,6 +80,12 @@ const store = new Vuex.Store({
         },
         jobValueCode_change(state,val){
             state.jobValueCode = val;
+        },
+        longMemberFlag_change(state,val){
+            state.longMemberFlag = val;
+        },
+        faceAgreOpenFlag_change(state,val){
+            state.faceAgreOpenFlag = val;
         }
     },
     actions: {}
