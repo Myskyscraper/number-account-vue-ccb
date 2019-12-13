@@ -50,10 +50,10 @@ const store = new Vuex.Store({
             state.dataC101=val
         },
         DataC104_Change(state,val){
-            state.dataC101=val
+            state.dataC104=val
         },
         DataFillBasicInfo_Change(state,val){
-            state.dataC101=val
+            state.dataFillBasicInfo=val
         },
         Avl_Bal_Change(state,val){
             state.Avl_Bal=val

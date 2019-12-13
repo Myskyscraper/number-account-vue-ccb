@@ -13,7 +13,7 @@
                 <span>零钱卡余额(元)</span>
                 <i>{{moneyNum}}</i>
             </div>
-            <div class="openWallet" v-show="!$store.state.openAnAccount"  @click="test">
+            <div class="openWallet" v-show="!$store.state.openAnAccount"  @click="goOpenAccount">
                 开通钱包
             </div>
         </div>
@@ -25,14 +25,6 @@
         </van-grid>
 
        
-        <div style="margin-top:10px;font-size:12px;" @click="test1">
-           测试：调到开户
-        </div>
-
-         <div style="margin-top:10px;font-size:12px;"  @click="test2">
-            测试：调到短信验证码
-        </div>
-
         <div class="hintbox">
             本服务由建设银行提供
         </div>
@@ -131,15 +123,10 @@ export default {
     methods:{
         onClickLeft() {
             // alert('返回')
-            this.$router.push("/walletMain")
+            this.$router.push("/walletMain");
         },
-        test1(){
-            console.log('ok')
-            this.$router.push("/addBankCard")
-        },
-        test2(){
-            console.log('ok')
-            this.$router.push("/openVerifcode")
+        goOpenAccount(){
+             this.$router.push("/addBankCard");
         },
         getMoneyMsg(){
             let params={
@@ -168,7 +155,8 @@ export default {
                     message: '<div style="text-align:left">尊敬的客户</div><div style="text-align:left;text-indent: 2em">您尚未开通零钱账户，点击确定将跳转开通零钱账户</div>'
                 }).then(() => {
                     // on confirm
-                    console.log("点击确定")
+                    console.log("点击确定");
+                    this.$router.push("/addBankCard");
                 }).catch(() => {
                     console.log("点击取消")
                     // on cancel

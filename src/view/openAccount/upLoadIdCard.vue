@@ -126,7 +126,7 @@ export default {
         };
          console.log("发送c104参数", params);
         this.$http(
-          "/LifeSvc/DigtAccWlt/DAWDightAccOCRId",
+          "/LifeSvc/DigtAccWlt/DAWDigtAccOCRId",
           "P5OISC104",
           params,
           true,
@@ -142,7 +142,7 @@ export default {
           })
           .catch(err => {
             console.log("数据请求失败", err);
-            //Dialog.alert({message: err});
+            Dialog.alert({message: err});
           });
       }
     }

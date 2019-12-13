@@ -18,7 +18,6 @@
       color="#09b6f2"
       class="bottomButton"
       :hairline="true"
-      :disabled="(verCodeNo.length<6)&&configFlag&&c206Flag"
       @click="configFn"
     >确定</van-button>
   </div>
@@ -37,7 +36,11 @@ export default {
       disabled: true,
       verCodeNo: "",
       configFlag:true,
-      c206Flag:false
+      c206Flag:false,
+      c102ReadyFlag:false,
+      numCallC103:0,
+      hasPassCBCheck:false,
+      hasSubmit:false
     };
   },
   computed: {
@@ -182,6 +185,7 @@ export default {
         )
           .then(res => {
             _this.initParamBeforCall103(res);
+            _this.c102ReadyFlag = true;
 
           })
           .catch(err => {
@@ -240,6 +244,14 @@ export default {
           false
         )
           .then(res => {
+            var rspCdDsc = res.Head.Txn_Rsp_Cd_Dsc;
+            var rspInf = res.Head.Txn_Rsp_Inf;
+            var sysEvtTraceId = res.Head.Sys_Evt_Trace_Id;
+            
+
+
+
+
            
           })
           .catch(err => {
@@ -345,10 +357,8 @@ export default {
             var rspInf = res.Head.Txn_Rsp_Inf;
             c206seq = res.Head.Sys_Evt_Trace_Id;
             if(rspInf =="success"){
-
               var status = res.Data.PBC_Bsn_StCd;
               var restus = res.Data.ClrAc_StCd;
-
               if(status =="PR09"){
                 var rqn = "流水号"+c206seq;
                 if(isnull(c206seq)){
@@ -367,7 +377,27 @@ export default {
 
               } else if((status=="PR05")&&(restus=="AS07")){
                     clearInterval(manyTimeAsk);
-                    _this.c206Flag = false;
+                   _this.hasPassCBCheck = true;
+                   if(_this.hasSubmit ==true){
+                     if(_this.c102ReadyFlag == true){
+                        if(_this.numCallC103 ==0){
+                            _this.numCallC103 =1;
+
+                            _this.sendC103Other();
+                        }
+                     }else{
+                       var reSubmitAfterC206 = setInterval(function(){
+                         if(_this.numCallC103 ==0){
+                           if(_this.c102ReadyFlag== true){
+                                this.numCallC103 = 1;
+                                _this.sendC103Other();
+                           }
+                         }else{
+                           clearInterval(reSubmitAfterC206);
+                         }
+                       },2000)
+                     }
+                   }
               } 
             }
           })
@@ -377,7 +407,53 @@ export default {
           });
     },
     configFn(){
-       this.sendC103();
+
+      if((this.verCodeNo.length<7)&&(this.verCodeNo.length>3)){
+          if(this.c102ReadyFlag ==true){
+            
+            if(this.$store.state.bankType =="105"){
+                if(this.numCallC103 ==0){
+                    this.numCallC103 = 1;
+
+                    this.sendC103();
+                }else{
+                   Dialog.alert({message: '验证码已提交，请稍后'});
+                   return ;
+                }
+
+            }else{
+
+              if(this.hasPassCBCheck == true){
+                if(this.hasSubmit ==false&&this.numCallC103==0){
+                     this.hasSubmit = true;
+
+                     this.sendC103Other();
+                }else{
+                    Dialog.alert({message: '验证码校验种，请勿重复提交'});
+                    return ;
+                }
+              }else{
+                   this.hasSubmit = true;
+                  // Dialog.alert({message: '验证码校验种，请勿重复提交'}); 校验中的
+                  return ;
+              }
+            }
+            
+
+          }else{
+              Dialog.alert({message: '后台数据校验种，请稍后重新提交信息'});
+              return ;
+          }
+      }else{
+          Dialog.alert({message: '您输入的验证码信息有误，请重新输入'});
+          return ;
+      }
+      
+    },
+    sendC103Other(){
+        
+
+
     },
     nvl(str,replace_str){
          var _this = this;

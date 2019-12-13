@@ -86,7 +86,10 @@ export default new Router({
         },{
             path:"/addBankCard",
             name:"addBankCard",
-            component: resolve =>require(['@/view/openAccount/addBankCard.vue'], resolve)
+            component: resolve =>require(['@/view/openAccount/addBankCard.vue'], resolve),
+            meta:{
+                keepAlive:true
+            }
         },{
             path:"/testDemo",
             name:"testDemo",
@@ -97,7 +100,10 @@ export default new Router({
         },{
             path:"/addPerInfo",
             name:"addPerInfo",
-            component: resolve =>require(['@/view/openAccount/addPerInfo.vue'], resolve)
+            component: resolve =>require(['@/view/openAccount/addPerInfo.vue'], resolve),
+            meta:{
+                keepAlive:true
+            }
         },{
             path:"/upLoadIdCard",
             name:"upLoadIdCard",
@@ -116,6 +122,13 @@ export default new Router({
             component: resolve =>require(['@/view/openAccount/faceRecog.vue'], resolve),
             meta:{
                 keepAlive:true
+            }
+        },{
+            path:"/etcContract",
+            name:"etcContract",
+            component: resolve =>require(['@/view/openAccount/contracts/etcContract.vue'], resolve),
+            meta:{
+                keepAlive:false
             }
         }
         

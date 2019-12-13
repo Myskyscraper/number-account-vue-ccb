@@ -91,8 +91,7 @@
       <div class="checkbox-wrap">
           <van-checkbox v-model="residChecked" style="float:left;"></van-checkbox> 
           <span>&nbsp;&nbsp;本人声明仅为税收居民，同意</span>
-          <span class="colorBlue" >《多点零钱卡用户服务协议》</span>
-          及 <span class="colorBlue" >《委托扣款服务协议》</span>
+          <router-link to="./etcContract" class="colorBlue"> 《多点零钱卡用户服务协议》</router-link>
       </div>
 
         <div style="height:10px;"> </div>
@@ -135,7 +134,6 @@ for(let i=0;i<len;i++){
 }
 
 // console.log(cityForm);
-
 
 let obj={};
 export default {
@@ -187,7 +185,6 @@ export default {
           defaultIndex: 0
         }
       ],
-      checked: false,
       bankList:[{
           value:'10410000004',
           text:'中国银行'
@@ -280,7 +277,7 @@ export default {
         
       }else{
           this.custName = this.$store.state.dataC104.Data.Idv_Nm;
-          this.custId = this.$store.state.dataC104.Data.IDCard_Nm;
+          this.custId = this.$store.state.dataC104.Data.IDCard_No;
       }
     },
     submitData(){
@@ -299,7 +296,7 @@ export default {
      }else if(this.adrvalue==""){
         Dialog.alert({message: '输入开户地址'});
         return ;
-     }else if(this.checked==false){
+     }else if(this.residChecked==false){
         Dialog.alert({message: '请勾选协议'});
         return ;
      }else{

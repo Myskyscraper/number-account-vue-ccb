@@ -11,7 +11,7 @@
             <router-link to="./addPerInfo"> 跳转到个人信息页面</router-link>
     </div>
 
-    <div @click="link">
+    <div @click="test">
         测试事件
     </div>
 
@@ -45,8 +45,10 @@ export default {
                 keepAlive:true
               }
             });
+    },
+    test(){
+       
     }
-    
   }
 };
 </script>
