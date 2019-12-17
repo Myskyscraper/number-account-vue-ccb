@@ -3,22 +3,21 @@
     <van-nav-bar title="添加银行卡" left-arrow @click-left="back" />
     <van-cell-group>
       <!-- <van-field v-model="bankCardNo" label="银行卡" placeholder="请输入银行卡号" type="tel" /> -->
-         
+        
+      <div class="bank-wrap-box">
+        <span>
+            银行卡
+        </span>
 
-           <div class="bank-wrap-box">
+        <input 
+          type="text"
+          placeholder="请输入银行卡号" 
+          :value="display_bank_account" 
+          @input="handleBankCardInput"
+        />
 
-              <span>
-                  银行卡
-              </span>
-
-              <input 
-                type="text"
-                placeholder="请输入银行卡号" 
-                :value="display_bank_account" 
-                @input="handleBankCardInput"
-              />
-
-           </div>
+      </div>
+      
     </van-cell-group>
 
     <van-button
@@ -135,6 +134,8 @@ export default {
           this.$store.commit("Data1010_Change", res); //存下1010数据
           let bankType = res.Data.BnkCD.slice(0, 3);
           this.$store.commit("bankType_change", bankType);
+          this.$store.commit("bankTypeNumber_change", res.Data.BnkCD);
+          this.$store.commit("bankTypeName_change", res.Data.IssuBnk_Nm);
           if (bankType == "105") {
             this.$router.push({
               path: "./addPerInfo",

@@ -267,6 +267,9 @@ export default {
     bankonConfirm(value){
       this.custBankType = value.text;//选择银行
       this.custBankSend = value.value;
+      this.$store.commit("bankType_change", value.value.slice(0, 3));
+      this.$store.commit("bankTypeNumber_change", value.value);
+      this.$store.commit("bankTypeName_change", value.text);
       this.bankshowPicker =false;
     },
     initData(){

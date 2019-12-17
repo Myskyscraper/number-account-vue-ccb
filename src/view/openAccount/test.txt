@@ -4,8 +4,7 @@
 -----------------------------
 initData();   
   callC206()
-
-initParamBeforCall102()
+  initParamBeforCall102()
 
   sendC102()
         initParamBeforCall103();
@@ -40,3 +39,67 @@ UQPSSIM_Crd_Num
 ASPD_ID
 ASPD_Ditm_ID
 TrckEndToETCphrtxtVal
+
+----------------------------
+c102后边需补充的值 √√√
+102值判断正确√√√
+103值判断正确√√√
+nextstep()执行下东西的
+sendOther(); 
+
+今天完成的
+
+  wkProv_AtnmsRgon_Cd,
+  wkUrbn_Cd,
+  wkCntyAndDstc_Cd,
+
+  
+
+  getGenderCodeByValue
+
+  wkGnd_Cd
+  wkCrdt_AvlDt_StDt = objDataC101.Data.Crdt_AvlDt_StDt;
+  wkCrdt_AvlDt_EdDt = objDataC101.Data.Crdt_AvlDt_EdDt;
+  wkEthnct_Cd = objDataC101.Data.Ethnct_Cd;
+  wkDtl_Adr_Cntnt = objDataC101.Data.Dtl_Adr_Cntnt;
+
+let params = {
+       " Digt_Acc_Ar_ID": this.$store.state.dataC101.Data.Digt_Acc_Ar_ID,
+        "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
+        "Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
+        "CntprtAcc": this.$store.state.data1010.Data.CntprtAcc, //对方账号
+        "BnkCD": this.$store.state.data1010.Data.BnkCD, //联行号
+        "IssuBnk_Nm": this.$store.state.data1010.Data.IssuBnk_Nm, //银行名称
+        "CrdHldr_Crdt_TpCd": "1010",
+        "CrdHldr_Crdt_No": custId, //持卡人证件号
+        "CrdHldr_Nm": custName, //持卡人证件姓名
+        "MblPh_No": custMobie,
+        "Crdt_AvlDt_StDt": custIdstart,
+        "Crdt_AvlDt_EdDt": custIdend,
+        "IssuCtf_Ahr_Nm": custlwEfr_Inst_Nm,
+        "Gnd_Cd": custGend,
+        "Nat_Cd": "156",
+        "Ethnct_Cd": custNation,
+        "Ocp_Cd": this.$store.state.jobValueCode, //职业
+        "CtyRgon_Cd": "156",
+        "Prov_AtnmsRgon_Cd": Prov_AtnmsRgon_Cd,
+        "Urbn_Cd": Urbn_Cd,
+        "CntyAndDstc_Cd": CntyAndDstc_Cd,
+        "Dtl_Adr_Cntnt": custAddress,
+        "ZipECD": this.$store.state.initData.ZipECD,
+        "DpBkInNo": this.$store.state.dpBkInNo,
+        "SMS_Vld_CD": this.verCodeNo,
+        "Ovrlsttn_EV_Trck_No": this.$store.state.dataC101.Data.Ovrlsttn_EV_Trck_No,
+        "SYS_SND_SERIAL_NO": this.$store.state.dataC101.Data.SYS_SND_SERIAL_NO,
+        "UQPS_Eqmt_Modl": UQPS_Eqmt_Modl,
+        "UQPS_Eqmt_Lng":UQPS_Eqmt_Lng ,
+        "UQPS_Adr": UQPS_Adr,
+        "UQPSMAC_Adr": UQPSMAC_Adr,
+        "UQPSSIM_Eqmt_No": UQPSSIM_Eqmt_No,
+        "UQPSGPS_LO": UQPSGPS_LO,
+        "UQPSSIM_CrdNo_CD": UQPSSIM_CrdNo_CD,
+        "UQPSSIM_Crd_Num": UQPSSIM_Crd_Num,
+        "ASPD_ID": ASPD_ID,
+        "ASPD_Ditm_ID": ASPD_Ditm_ID,
+        "TrckEndToETCphrtxtVal": TrckEndToETCphrtxtVal
+      };

@@ -32,6 +32,7 @@ let wkCrdt_AvlDt_StDt,
   wkDtl_Adr_Cntnt,
   wkCrdHldr_Crdt_No,
   wkCrdHldr_Nm,
+  wkIssuCtf_Ahr_Nm,
   wkMblPh_No;
 let custId,
   custName,
@@ -94,7 +95,7 @@ export default {
       this.$router.go(-1);
     },
     initData() {
-      if (this.$store.state.bankType == "105") {
+      if (this.$store.state.bankType != "105") {
         this.c206Flag = true;
         var count = 0;
         manyTimeAsk = setInterval(() => {
@@ -113,19 +114,25 @@ export default {
       let objDataC101 = this.$store.state.dataC101;
       let objDataBasicInfo = this.$store.state.dataFillBasicInfo;
       let objDataC104 = this.$store.state.dataC104;
+      let objInitMobile = this.$store.state.initData;
 
-      UQPS_Eqmt_Modl = this.$ccbskObj.isnullsetVal(UQPS_Eqmt_Modl);
-      UQPS_Eqmt_Lng = this.$ccbskObj.isnullsetVal(UQPS_Eqmt_Lng);
-      UQPS_Adr = this.$ccbskObj.isnullsetVal(UQPS_Adr);
-      UQPSMAC_Adr = this.$ccbskObj.isnullsetVal(UQPSMAC_Adr);
-      UQPSSIM_Eqmt_No = this.$ccbskObj.isnullsetVal(UQPSSIM_Eqmt_No);
-      UQPSGPS_LO = this.$ccbskObj.isnullsetVal(UQPSGPS_LO);
-      UQPSSIM_CrdNo_CD = this.$ccbskObj.isnullsetVal(UQPSSIM_CrdNo_CD);
-      UQPSSIM_Crd_Num = this.$ccbskObj.isnullsetVal(UQPSSIM_Crd_Num);
-      ASPD_ID = this.$ccbskObj.isnullsetVal(ASPD_ID);
-      ASPD_Ditm_ID = this.$ccbskObj.isnullsetVal(ASPD_Ditm_ID);
-      TrckEndToETCphrtxtVal = this.$ccbskObj.isnullsetVal(TrckEndToETCphrtxtVal);
+      UQPS_Eqmt_Modl = this.$ccbskObj.isnullsetVal(objInitMobile.UQPS_Eqmt_Modl);
+      UQPS_Eqmt_Lng = this.$ccbskObj.isnullsetVal(objInitMobile.UQPS_Eqmt_Lng);
+      UQPS_Adr = this.$ccbskObj.isnullsetVal(objInitMobile.UQPS_Adr);
+      UQPSMAC_Adr = this.$ccbskObj.isnullsetVal(objInitMobile.UQPSMAC_Adr);
+      UQPSSIM_Eqmt_No = this.$ccbskObj.isnullsetVal(objInitMobile.UQPSSIM_Eqmt_No);
+      UQPSGPS_LO = this.$ccbskObj.isnullsetVal(objInitMobile.UQPSGPS_LO);
+      UQPSSIM_CrdNo_CD = this.$ccbskObj.isnullsetVal(objInitMobile.UQPSSIM_CrdNo_CD);
+      UQPSSIM_Crd_Num = this.$ccbskObj.isnullsetVal(objInitMobile.UQPSSIM_Crd_Num);
+      ASPD_ID = this.$ccbskObj.isnullsetVal(objInitMobile.ASPD_ID);
+      ASPD_Ditm_ID = this.$ccbskObj.isnullsetVal(objInitMobile.ASPD_Ditm_ID);
+      TrckEndToETCphrtxtVal = this.$ccbskObj.isnullsetVal(objInitMobile.TrckEndToETCphrtxtVal);
+      wkIssuCtf_Ahr_Nm = '';
+      if(!this.$ccbskObj.isnull(objDataC104)){
+          wkIssuCtf_Ahr_Nm = objDataC104.Data.IssuCtf_Ahr_Nm;
+      }
 
+      longMemberFlag = this.$store.state.longMemberFlag;
       wkCrdHldr_No = this.nvl(
         objDataC101.Data.CrdHldr_Crdt_No,
         objDataBasicInfo.CrdHldr_Crdt_No
@@ -144,6 +151,7 @@ export default {
       } else {
         wkGnd_Cd = objDataC101.Data.Gnd_Cd;
       }
+
       if (this.$ccbskObj.isnull(objDataC104)) {
         wkCrdt_AvlDt_StDt = objDataC101.Data.Crdt_AvlDt_StDt;
         wkCrdt_AvlDt_EdDt = objDataC101.Data.Crdt_AvlDt_EdDt;
@@ -173,17 +181,18 @@ export default {
       var _this = this;
       let objDataC101 = this.$store.state.dataC101;
       let objDataC104 = this.$store.state.dataC104;
+      let objDatac101Fill = this.$store.state.dataFillBasicInfo;
       custId = this.nvl(
         objc102.Data.CrdHldr_Crdt_No,
-        objDataC101.Data.CrdHldr_Crdt_No
+        objDatac101Fill.CrdHldr_Crdt_No
       );
-      custName = this.nvl(objc102.Data.CrdHldr_Nm, objDataC101.Data.CrdHldr_Nm);
-      custMobie = this.nvl(objc102.Data.MblPh_No, objDataC101.Data.MblPh_No);
+      custName = this.nvl(objc102.Data.CrdHldr_Nm, objDatac101Fill.CrdHldr_Nm);
+      custMobie = this.nvl(objc102.Data.MblPh_No, objDatac101Fill.MblPh_No);
 
       if (this.$ccbskObj.isnull(objc102.Gnd_Cd)) {
-        custGend = objDataC104.Data.Urbn_Cd;
+        custGend = this.getGenderCodeByValue(objDataC104.Data.Gnd);
       } else {
-        custGend = objc102.Data.Urbn_Cd;
+        custGend = objc102.Data.Gnd_Cd;
       }
 
       if (!this.$ccbskObj.isnull(objDataC104)) {
@@ -220,35 +229,36 @@ export default {
     },
     sendC102() {
       var _this = this;
+      let objDataC101 = this.$store.state.dataC101;
       let params = {
-        "Digt_Acc_Ar_ID": "",
+        "Digt_Acc_Ar_ID": objDataC101.Data.Digt_Acc_Ar_ID,
         "Prtn_Chnl_ID": this.$store.state.initData.Prtn_Chnl_ID, //合作方渠道编号
         "Prtn_Mbsh_ID": this.$store.state.initData.Prtn_Mbsh_ID, //合作方会员编号
-        "CntprtAcc": this.$store.state.data1010.Data.CntprtAcc, //对方账号
-        "BnkCD": this.$store.state.data1010.Data.BnkCD, //联行号
-        "IssuBnk_Nm": this.$store.state.data1010.Data.IssuBnk_Nm, // 银行名称
+        "CntprtAcc": objDataC101.Data.CntprtAcc, //对方账号
+        "BnkCD": this.$store.state.bankTypeNumber, //联行号
+        "IssuBnk_Nm":this.$store.state.bankTypeName, // 银行名称
         "CrdHldr_Crdt_TpCd": "1010",
         "CrdHldr_Crdt_No": wkCrdHldr_No, //持卡人证件号
         "CrdHldr_Nm": wkCrdHldr_Nm, //持卡人证件姓名
         "MblPh_No": wkMblPh_No,
         "Crdt_AvlDt_StDt": wkCrdt_AvlDt_StDt,
         "Crdt_AvlDt_EdDt": wkCrdt_AvlDt_EdDt,
-        "IssuCtf_Ahr_Nm": "", //发证机关名称
+        "IssuCtf_Ahr_Nm": wkIssuCtf_Ahr_Nm, //发证机关名称
         "Gnd_Cd": wkGnd_Cd,
         "Nat_Cd": "156",
         "Ethnct_Cd": wkEthnct_Cd,
         "Ocp_Cd": this.$store.state.jobValueCode, //职业代码
         "CtyRgon_Cd": "156",
-        "Prov_AtnmsRgon_Cd": "", //省去
-        "Urbn_Cd": "", //城市代码
-        "CntyAndDstc_Cd": "", //县区代码
+        "Prov_AtnmsRgon_Cd": objDataC101.Data.Prov_AtnmsRgon_Cd, //省去
+        "Urbn_Cd":objDataC101.Data.Urbn_Cd, //城市代码
+        "CntyAndDstc_Cd": objDataC101.Data.CntyAndDstc_Cd, //县区代码
         "Dtl_Adr_Cntnt": wkDtl_Adr_Cntnt, //详细地址
-        "ZipECD": "", //邮政编码
+        "ZipECD":this.$store.state.initData.ZipECD, //邮政编码
         "DpBkInNo": this.$store.state.dpBkInNo, //开户机构编号
         "Ovrlsttn_EV_Trck_No": this.$store.state.initData.Ovrlsttn_EV_Trck_No,
         "SYS_SND_SERIAL_NO": this.$store.state.initData.SYS_SND_SERIAL_NO,
         "TrckEndToETCphrtxtVal": "",
-        "Digt_Acc_Mbsh_TpCd": ""
+        "Digt_Acc_Mbsh_TpCd": longMemberFlag
       };
 
       this.$http(
@@ -335,7 +345,7 @@ export default {
         //请求路径
         "Url": "/LifeSvc/DigtAccWlt/DAWDigtAccAEst", //DAWBndgAccRelEnqr
         "Head": {
-          "SYS_TX_CODE": SYS_TX_CODE,
+          "SYS_TX_CODE":  "P5OISC103",
          " Rqs_Jrnl_No": store.state.Rqs_Jrnl_No
         },
        " Data": params
